@@ -1,7 +1,7 @@
 streamlit
+opencv-python-headless
+mediapipe
 matplotlib
 numpy
 fpdf
-Pillow
-opencv-python-headless
-mp
+
