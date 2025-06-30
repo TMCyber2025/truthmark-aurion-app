@@ -3,5 +3,3 @@ opencv-python-headless
 matplotlib
 numpy
 fpdf
-
-
