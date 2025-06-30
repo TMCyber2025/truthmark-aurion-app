@@ -86,7 +86,6 @@ def generate_forensic_pdf(video_name, fig_img, pdf_path, truth_score):
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
 
-    # Header
     pdf.set_font("Times", "B", 20)
     pdf.set_text_color(40, 40, 40)
     pdf.cell(0, 10, "TruthMark-Aurion Digital Forensic Report", ln=True, align="C")
@@ -95,7 +94,6 @@ def generate_forensic_pdf(video_name, fig_img, pdf_path, truth_score):
     pdf.line(15, pdf.get_y(), 195, pdf.get_y())
     pdf.ln(6)
 
-    # Summary line - plain ASCII
     pdf.set_font("Times", "", 9)
     pdf.set_text_color(80, 80, 80)
     summary_line = f"Video: {video_name} | Generated: {timestamp} UTC | TruthMatch Score: {truth_score:.1f}%"
@@ -108,7 +106,6 @@ def generate_forensic_pdf(video_name, fig_img, pdf_path, truth_score):
         pdf.cell(0, 8, "(Graph image could not be loaded)", ln=True)
 
     pdf.ln(8)
-
     pdf.set_font("Times", "", 10)
     pdf.set_text_color(40,40,40)
     pdf.multi_cell(0, 5,
@@ -132,13 +129,10 @@ def generate_forensic_pdf(video_name, fig_img, pdf_path, truth_score):
         f"strong forensic confidence, with no significant indicators of deception detected."
     )
     pdf.ln(4)
-
-    # Digital verification seal - plain ASCII
     pdf.set_fill_color(240,240,240)
     pdf.set_font("Times", "I", 9)
     pdf.cell(0, 6, f"Verification Seal: {seal_hash}", ln=True, align="C", fill=True)
     pdf.ln(2)
-    pdf.set_font("Times", "I", 9)
     pdf.cell(0, 5, "Verified Digital Forensic Document - TruthMark-Aurion", ln=True, align="C")
 
     pdf.output(pdf_path)
@@ -182,3 +176,12 @@ if uploaded_file is not None:
             file_name="TruthMark_Aurion_Digital_Forensic_Report.pdf",
             mime="application/pdf"
         )
+
+# === DISCLAIMER ===
+st.markdown(
+    "<div style='padding-top:30px; font-size:14px; color:#999;'>"
+    "<em>This system is currently in alpha demonstration mode. "
+    "Full multi-signal forensic analysis is being validated for "
+    "accredited deployment.</em></div>",
+    unsafe_allow_html=True
+)
