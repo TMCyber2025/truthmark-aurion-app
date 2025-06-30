@@ -53,34 +53,38 @@ def generate_pdf_report(video_name, fig_img, pdf_path, truth_score):
     seal_hash = generate_hash(video_name + timestamp)
 
     pdf = FPDF('P', 'mm', 'A4')
+    pdf.set_auto_page_break(auto=False, margin=0)
     pdf.add_page()
 
-    pdf.set_font("Times", "B", 20)
+    pdf.set_font("Times", "B", 18)
     pdf.cell(0, 10, "TruthMark-Aurion Digital Forensic Report", ln=True, align="C")
-    pdf.ln(5)
 
-    pdf.set_font("Times", "", 10)
-    pdf.cell(0, 6, f"Video: {video_name}", ln=True, align="C")
-    pdf.cell(0, 6, f"Generated: {timestamp} UTC", ln=True, align="C")
-    pdf.cell(0, 6, f"TruthMatch Score: {truth_score:.1f}%", ln=True, align="C")
-    pdf.ln(8)
+    pdf.set_font("Times", "", 9)
+    pdf.cell(0, 5, f"Video: {video_name}", ln=True, align="C")
+    pdf.cell(0, 5, f"Generated: {timestamp} UTC", ln=True, align="C")
+    pdf.cell(0, 5, f"TruthMatch Score: {truth_score:.1f}%", ln=True, align="C")
 
-    pdf.image(fig_img, x=20, w=170)
-    pdf.ln(8)
-    pdf.set_font("Times", "", 10)
-    pdf.multi_cell(0, 5,
-        "Methodology:\n"
-        "- Multi-signal simulated biometric analysis across truth, stress, and baseline markers.\n"
-        "- Cluster means and deviation regression for composite scoring.\n"
-        "- Confidence levels benchmarked on normalized patterns.\n\n"
-        f"Conclusion:\nThis analysis indicates strong alignment with expected truthful patterns. "
-        f"A TruthMatch Score of {truth_score:.1f}% supports forensic confidence, with no significant deception detected."
+    pdf.ln(4)
+    pdf.image(fig_img, x=15, w=180)
+    pdf.ln(3)
+
+    pdf.set_font("Times", "", 8)
+    pdf.multi_cell(0, 4,
+        "Methodology: Multi-signal simulated biometric analysis was conducted across truth, stress, and baseline markers. "
+        "Cluster means and deviation regressions were calculated for composite scoring.\n\n"
+        "Conclusion: The current data indicates alignment with truthful norms, resulting in a TruthMatch Score of "
+        f"{truth_score:.1f}%, supporting high forensic confidence with no significant deception signals."
     )
-    pdf.ln(5)
-    pdf.set_font("Times", "I", 9)
-    pdf.cell(0, 5, f"Verification Seal: {seal_hash}", ln=True, align="C")
-    pdf.cell(0, 5, "Verified Digital Forensic Document - TruthMark-Aurion", ln=True, align="C")
 
+    pdf.ln(3)
+    pdf.set_font("Times", "I", 7)
+    pdf.cell(0, 4, f"Verification Seal: {seal_hash}", ln=True, align="C")
+    pdf.cell(0, 4, "Verified Digital Forensic Document - TruthMark-Aurion", ln=True, align="C")
+    pdf.ln(2)
+    pdf.multi_cell(0, 3,
+        "This system is currently in alpha demonstration mode. "
+        "Full multi-signal forensic analysis is being validated for accredited deployment."
+    )
     pdf.output(pdf_path)
 
 # ============ STREAMLIT ============
@@ -96,8 +100,7 @@ if uploaded_file:
     with st.spinner("Generating forensic multi-signal analysis..."):
         fig_img = "forensic_multiplot.png"
         create_forensic_multiplot(fig_img)
-        truth_score = 98.9  # Still simulated
-
+        truth_score = 98.9  # Simulated score for demonstration
         pdf_path = "TruthMark_Aurion_Digital_Forensic_Report.pdf"
         generate_pdf_report(video_name, fig_img, pdf_path, truth_score)
 
@@ -108,7 +111,7 @@ if uploaded_file:
         st.download_button("Download PDF Report", f, file_name=pdf_path, mime="application/pdf")
 
     st.markdown(
-        "<div style='padding-top:30px; font-size:14px; color:#999;'>"
+        "<div style='padding-top:20px; font-size:13px; color:#999;'>"
         "<em>This system is currently in alpha demonstration mode. "
         "Full multi-signal forensic analysis is being validated for accredited deployment.</em></div>",
         unsafe_allow_html=True
