@@ -66,9 +66,11 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.add_page()
 
     pdf.set_font("Times", "B", 18)
-    pdf.cell(0, 10, "TruthMark-Aurion: Guardian of Truth", ln=True, align="C")
+    pdf.cell(0, 10, "TruthMark-Aurion", ln=True, align="C")
+    pdf.set_font("Times", "I", 14)
+    pdf.cell(0, 8, "Guardian of the Truth", ln=True, align="C")
     pdf.set_font("Times", "I", 12)
-    pdf.cell(0, 8, "Powered by Quantum Overseer", ln=True, align="C")
+    pdf.cell(0, 8, "Quantum Overseer", ln=True, align="C")
 
     pdf.set_font("Times", "", 9)
     pdf.cell(0, 5, f"Video: {video_name}", ln=True, align="C")
@@ -100,17 +102,26 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.output(pdf_path)
 
 # ============ STREAMLIT ============
-st.set_page_config(page_title="TruthMark-Aurion: Guardian of Truth", layout="centered")
+st.set_page_config(page_title="TruthMark-Aurion", layout="centered")
 if "show_upload" not in st.session_state:
     st.session_state.show_upload = False
 
 if not st.session_state.show_upload:
-    st.markdown("<h1 style='text-align:center;'>TruthMark-Aurion: Guardian of Truth</h1>", unsafe_allow_html=True)
-    st.markdown("<h3 style='text-align:center; color:#888;'>Powered by Quantum Overseer</h3>", unsafe_allow_html=True)
-    st.markdown("<div style='text-align:center; padding:30px;'>"
-                "<button style='font-size:20px; padding:15px 30px; background-color:#3498db; color:white; border:none; border-radius:8px; cursor:pointer;' "
-                "onclick='window.location.reload();'>START FORENSIC ANALYSIS</button></div>", unsafe_allow_html=True)
-    if st.button("🚀 Or Click Here to Start"):
+    st.markdown("<h1 style='text-align:center;'>TruthMark-Aurion</h1>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; color:#555;'>Guardian of the Truth</h2>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align:center; color:#888;'>Quantum Overseer</h3>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style='text-align:center; padding:30px;'>
+            <button style='font-size:22px; padding:15px 40px; background-color:#3498db; color:white; border:none; border-radius:8px; cursor:pointer;' 
+                    onclick='window.location.reload();'>
+                START FORENSIC ANALYSIS
+            </button>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    if st.button("Or click here to start", help="Alt trigger"):
         st.session_state.show_upload = True
 else:
     st.title("TruthMark-Aurion Digital Forensics")
