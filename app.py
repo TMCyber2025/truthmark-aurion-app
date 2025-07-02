@@ -111,8 +111,8 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.cell(0, 5, safe_text(f"Verification Seal: {seal_hash}"), ln=True, align="C")
     pdf.cell(0, 5, safe_text("TruthMark-Aurion • Cryptographic Artifact Chain"), ln=True, align="C")
 
-    # Center QR code horizontally
-    pdf.image(qr_img_path, x=(pdf.w - 50) / 2, w=50)
+    # Center QR code horizontally with half size (25mm)
+    pdf.image(qr_img_path, x=(pdf.w - 25) / 2, w=25)
     pdf.ln(6)
 
     pdf.set_font("Times", "I", 7)
