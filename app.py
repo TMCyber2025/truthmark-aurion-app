@@ -70,7 +70,7 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.add_page()
 
     pdf.set_font("Times", "B", 18)
-    pdf.cell(0, 10, "TruthMark-Aurion Digital Forensic Report", ln=True, align="C")
+    pdf.cell(0, 10, "TruthMark-Aurion Digital Forensic Report ✅ NEW LIVE", ln=True, align="C")
 
     pdf.set_font("Times", "", 9)
     pdf.cell(0, 5, f"Video: {video_name}", ln=True, align="C")
@@ -102,9 +102,9 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.output(pdf_path)
 
 # ============ STREAMLIT ============
-st.set_page_config(page_title="TruthMark-Aurion Forensics", layout="centered")
-st.title("TruthMark-Aurion Digital Forensics")
-st.write("Upload your video to generate a secure, court-grade digital forensic summary.")
+st.set_page_config(page_title="TruthMark-Aurion Forensics ✅ NEW LIVE", layout="centered")
+st.title("TruthMark-Aurion Digital Forensics ✅ NEW LIVE")
+st.write("Upload your video to generate a secure, court-grade digital forensic summary with upgraded QR and dynamic scoring.")
 
 uploaded_file = st.file_uploader("Upload video file", type=["mp4", "mov", "avi", "mpeg4"])
 if uploaded_file:
