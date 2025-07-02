@@ -122,6 +122,12 @@ if not st.session_state.show_upload:
             color: white;
             border-radius: 10px;
             border: none;
+            transition: background-color 0.3s ease;
+        }
+        div.stButton > button:hover {
+            background-color: #2980b9;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(41, 128, 185, 0.6);
         }
         </style>
     """, unsafe_allow_html=True)
@@ -172,6 +178,6 @@ else:
         st.markdown(f"""
             <hr style='margin-top:30px;'>
             <div style='text-align:center; font-size:12px; color:#999;'>
-                TruthMark-Aurion v0.4 • Deployed: 2025-07-02 by Sebastian
+                TruthMark-Aurion v0.4 • © Sebastian Andrews 2025
             </div>
         """, unsafe_allow_html=True)
