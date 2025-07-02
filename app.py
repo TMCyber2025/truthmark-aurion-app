@@ -8,7 +8,6 @@ import datetime
 import hashlib
 import qrcode
 import random
-import os
 
 # ===================== UTILITY =====================
 def utc_now():
@@ -107,14 +106,6 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
 # ===================== STREAMLIT UI =====================
 st.set_page_config(page_title="TruthMark-Aurion", layout="centered")
 
-with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Lock-green.svg/120px-Lock-green.svg.png", width=60)
-    st.markdown("### TruthMark-Aurion v0.4")
-    st.caption(f"Synced: {utc_now()} UTC")
-    st.markdown("---")
-    st.write("**Sebastian's Digital Integrity Suite**")
-    st.caption("Multi-signal biometric integrity assessment with secure PDF synthesis and chain-of-custody seal.")
-
 if "show_upload" not in st.session_state:
     st.session_state.show_upload = False
 
@@ -168,7 +159,19 @@ else:
         else:
             st.error("Low confidence. Signals show deviation from standard baselines.")
 
-        st.image(fig_img, caption="Forensic Signal Graph", use_column_width=True)
+        st.image(fig_img, caption="Multi-Signal Forensic Graph", use_column_width=True)
 
+        st.markdown("### 📥 Download Your Verified Forensic Report")
         with open(pdf_path, "rb") as f:
-            st.download_button("⬇️ Download Full PDF Report",
+            st.download_button(
+                label="⬇️ Download Full PDF Report",
+                data=f.read(),
+                file_name=pdf_path,
+                mime="application/pdf",
+                help="Court-grade document with embedded verification seal and QR trace"
+            )
+
+        st.markdown(f"""
+            <hr style='margin-top:30px;'>
+            <div style='text-align:center; font-size:12px; color:#999;'>
+                TruthMark-Aurion v0.4 •
