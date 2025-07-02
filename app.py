@@ -17,7 +17,7 @@ def generate_hash(text):
     return hashlib.sha256(text.encode()).hexdigest()[:32]
 
 def generate_qr_code(data, filename):
-    qr = qrcode.QRCode(version=2, box_size=8, border=2)  # larger box_size for better resolution
+    qr = qrcode.QRCode(version=2, box_size=8, border=2)  # Larger box for clarity
     qr.add_data(data)
     qr.make(fit=True)
     img = qr.make_image(fill_color='black', back_color='white')
@@ -66,10 +66,14 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     timestamp = utc_now()
     seal_hash = generate_hash(video_name + timestamp)
 
-    # Verify and force save images as PNG to avoid encoding issues
-    for path in [fig_img, qr_img]:
+    # Use absolute paths for images
+    fig_img_path = os.path.abspath(fig_img)
+    qr_img_path = os.path.abspath(qr_img)
+
+    # Validate images exist and save as PNG to avoid PDF issues
+    for path in [fig_img_path, qr_img_path]:
         if not os.path.isfile(path):
-            raise FileNotFoundError(f"Image not found: {path}")
+            raise FileNotFoundError(f"Required image not found: {path}")
         img = Image.open(path)
         img.save(path, format='PNG')
 
@@ -80,9 +84,8 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     def safe_text(text):
         return text.encode('latin1', 'replace').decode('latin1')
 
-    pdf.set_font("Times", "B", 20)
-    pdf.set_text_color(44, 62, 80)
-    pdf.cell(0, 12, safe_text("TruthMark-Aurion Digital Forensics"), ln=True, align="C")
+    pdf.set_font("Times", "B", 18)
+    pdf.cell(0, 10, safe_text("TruthMark-Aurion Digital Forensics"), ln=True, align="C")
 
     pdf.set_font("Times", "I", 14)
     pdf.cell(0, 8, safe_text("Guardian of the Truth"), ln=True, align="C")
@@ -93,7 +96,7 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.cell(0, 6, safe_text(f"TruthMatch Score: {truth_score:.1f}%"), ln=True, align="C")
 
     pdf.ln(4)
-    pdf.image(fig_img, x=15, w=180)
+    pdf.image(fig_img_path, x=15, w=180)
     pdf.ln(6)
 
     pdf.set_font("Times", "", 8)
@@ -104,15 +107,16 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
                   "high forensic confidence and minimal deviation from baseline norms."))
 
     pdf.ln(8)
+    pdf.set_font("Times", "I", 8)
+    pdf.cell(0, 5, safe_text(f"Verification Seal: {seal_hash}"), ln=True, align="C")
+    pdf.cell(0, 5, safe_text("TruthMark-Aurion • Cryptographic Artifact Chain"), ln=True, align="C")
+
+    # Center QR code horizontally
+    pdf.image(qr_img_path, x=(pdf.w - 50) / 2, w=50)
+    pdf.ln(6)
+
     pdf.set_font("Times", "I", 7)
-    pdf.cell(0, 4, safe_text(f"Verification Seal: {seal_hash}"), ln=True, align="C")
-    pdf.cell(0, 4, safe_text("TruthMark-Aurion • Cryptographic Artifact Chain"), ln=True, align="C")
-
-    # Place QR code centered horizontally near the bottom
-    qr_x = (210 - 60) / 2  # A4 width 210mm minus QR width 60mm, divided by 2
-    pdf.image(qr_img, x=qr_x, w=60)
-
-    pdf.multi_cell(0, 6,
+    pdf.multi_cell(0, 4,
                    safe_text("Scan the QR code to validate document lineage or access secure custody logs.\n"
                              "This alpha release is undergoing signal calibration for accredited forensic integration."))
 
@@ -195,7 +199,7 @@ else:
                 help="Court-grade document with embedded verification seal and QR trace"
             )
 
-        # Demo alpha disclaimer right below the button, subtle and italic
+        # Demo alpha disclaimer right below the download button
         st.markdown("""
             <div style='text-align:center; font-size:13px; color:#999; font-style: italic; margin-top:10px; margin-bottom: 30px;'>
                 This system is currently in alpha demonstration mode. Full multi-signal forensic analysis is undergoing validation for accredited deployment.
