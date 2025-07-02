@@ -1,7 +1,3 @@
-# Confirmed update: 2025-07-02 by Sebastian with upgrades
-# Force rebuild: 2025-07-02
-# Force rebuild: 2025-07-02 round 2
-
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -70,7 +66,7 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.add_page()
 
     pdf.set_font("Times", "B", 18)
-    pdf.cell(0, 10, "TruthMark-Aurion Digital Forensic Report ✅ NEW LIVE", ln=True, align="C")
+    pdf.cell(0, 10, "TruthMark-Aurion Digital Forensic Report ✅ NEW FLOW", ln=True, align="C")
 
     pdf.set_font("Times", "", 9)
     pdf.cell(0, 5, f"Video: {video_name}", ln=True, align="C")
@@ -102,43 +98,52 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.output(pdf_path)
 
 # ============ STREAMLIT ============
-st.set_page_config(page_title="TruthMark-Aurion Forensics ✅ NEW LIVE", layout="centered")
-st.title("TruthMark-Aurion Digital Forensics ✅ NEW LIVE")
-st.write("Upload your video to generate a secure, court-grade digital forensic summary with upgraded QR and dynamic scoring.")
+st.set_page_config(page_title="TruthMark-Aurion Start ✅", layout="centered")
+st.title("TruthMark-Aurion Forensics Start ✅ NEW FLOW")
 
-uploaded_file = st.file_uploader("Upload video file", type=["mp4", "mov", "avi", "mpeg4"])
-if uploaded_file:
-    video_name = uploaded_file.name
-    with open(video_name, "wb") as f:
-        f.write(uploaded_file.getbuffer())
+if "show_upload" not in st.session_state:
+    st.session_state.show_upload = False
 
-    with st.spinner("Generating forensic multi-signal analysis..."):
-        timestamp_str = datetime.datetime.utcnow().strftime('%Y%m%d_%H%M%S')
-        fig_img = f"forensic_multiplot_{timestamp_str}.png"
-        qr_img = f"chain_qr_{timestamp_str}.png"
-        pdf_path = f"TruthMark_Aurion_Report_{timestamp_str}.pdf"
+if not st.session_state.show_upload:
+    if st.button("🚀 START FORENSIC ANALYSIS", help="Click to begin multi-signal upload & analysis"):
+        st.session_state.show_upload = True
+else:
+    st.title("TruthMark-Aurion Digital Forensics ✅ NEW LIVE")
+    st.write("Upload your video to generate a secure, court-grade digital forensic summary with upgraded QR and dynamic scoring.")
 
-        create_forensic_multiplot(fig_img)
-        generate_qr_code(f"Verified: {video_name} @ {timestamp_str}", qr_img)
+    uploaded_file = st.file_uploader("Upload video file", type=["mp4", "mov", "avi", "mpeg4"])
+    if uploaded_file:
+        video_name = uploaded_file.name
+        with open(video_name, "wb") as f:
+            f.write(uploaded_file.getbuffer())
 
-        truth_score = random.uniform(94.5, 99.7)
-        generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score)
+        with st.spinner("Generating forensic multi-signal analysis..."):
+            timestamp_str = datetime.datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+            fig_img = f"forensic_multiplot_{timestamp_str}.png"
+            qr_img = f"chain_qr_{timestamp_str}.png"
+            pdf_path = f"TruthMark_Aurion_Report_{timestamp_str}.pdf"
 
-    st.markdown(f"<h2 style='font-size:36px; color:#81c784;'>TruthMatch Score: {truth_score:.1f}%</h2>", unsafe_allow_html=True)
-    if truth_score > 97:
-        st.success("High confidence: signals indicate strong alignment with truthful norms.")
-    elif truth_score > 95:
-        st.warning("Moderate confidence: signals mostly align with truthful norms.")
-    else:
-        st.error("Caution: slight deviations noted. Further review recommended.")
+            create_forensic_multiplot(fig_img)
+            generate_qr_code(f"Verified: {video_name} @ {timestamp_str}", qr_img)
 
-    st.image(fig_img, caption="Multi-signal forensic graph", use_column_width=True)
-    with open(pdf_path, "rb") as f:
-        st.download_button("Download PDF Report", f, file_name=pdf_path, mime="application/pdf")
+            truth_score = random.uniform(94.5, 99.7)
+            generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score)
 
-    st.markdown(
-        "<div style='padding-top:20px; font-size:13px; color:#999;'>"
-        "<em>This system is currently in alpha demonstration mode. "
-        "Full multi-signal forensic analysis is being validated for accredited deployment.</em></div>",
-        unsafe_allow_html=True
-    )
+        st.markdown(f"<h2 style='font-size:36px; color:#81c784;'>TruthMatch Score: {truth_score:.1f}%</h2>", unsafe_allow_html=True)
+        if truth_score > 97:
+            st.success("High confidence: signals indicate strong alignment with truthful norms.")
+        elif truth_score > 95:
+            st.warning("Moderate confidence: signals mostly align with truthful norms.")
+        else:
+            st.error("Caution: slight deviations noted. Further review recommended.")
+
+        st.image(fig_img, caption="Multi-signal forensic graph", use_column_width=True)
+        with open(pdf_path, "rb") as f:
+            st.download_button("Download PDF Report", f, file_name=pdf_path, mime="application/pdf")
+
+        st.markdown(
+            "<div style='padding-top:20px; font-size:13px; color:#999;'>"
+            "<em>This system is currently in alpha demonstration mode. "
+            "Full multi-signal forensic analysis is being validated for accredited deployment.</em></div>",
+            unsafe_allow_html=True
+        )
