@@ -1,5 +1,3 @@
-# TruthMark-Aurion v0.4 • Deployed: 2025-07-02 by Sebastian
-
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -174,4 +172,6 @@ else:
         st.markdown(f"""
             <hr style='margin-top:30px;'>
             <div style='text-align:center; font-size:12px; color:#999;'>
-                TruthMark-Aurion v0.4 •
+                TruthMark-Aurion v0.4 • Deployed: 2025-07-02 by Sebastian
+            </div>
+        """, unsafe_allow_html=True)
