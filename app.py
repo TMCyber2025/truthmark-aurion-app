@@ -17,7 +17,7 @@ def generate_hash(text):
     return hashlib.sha256(text.encode()).hexdigest()[:32]
 
 def generate_qr_code(data, filename):
-    qr = qrcode.QRCode(version=1, box_size=5, border=2)
+    qr = qrcode.QRCode(version=2, box_size=8, border=2)  # larger box_size for better resolution
     qr.add_data(data)
     qr.make(fit=True)
     img = qr.make_image(fill_color='black', back_color='white')
@@ -94,7 +94,7 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
 
     pdf.ln(4)
     pdf.image(fig_img, x=15, w=180)
-    pdf.ln(2)
+    pdf.ln(6)
 
     pdf.set_font("Times", "", 8)
     pdf.multi_cell(0, 4,
@@ -103,13 +103,16 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
                   f"Conclusion: The analyzed data aligns with truthful signal profiles. Score of {truth_score:.1f}% suggests "
                   "high forensic confidence and minimal deviation from baseline norms."))
 
-    pdf.ln(4)
+    pdf.ln(8)
     pdf.set_font("Times", "I", 7)
     pdf.cell(0, 4, safe_text(f"Verification Seal: {seal_hash}"), ln=True, align="C")
     pdf.cell(0, 4, safe_text("TruthMark-Aurion • Cryptographic Artifact Chain"), ln=True, align="C")
-    pdf.image(qr_img, x=75, w=60)
 
-    pdf.multi_cell(0, 3,
+    # Place QR code centered horizontally near the bottom
+    qr_x = (210 - 60) / 2  # A4 width 210mm minus QR width 60mm, divided by 2
+    pdf.image(qr_img, x=qr_x, w=60)
+
+    pdf.multi_cell(0, 6,
                    safe_text("Scan the QR code to validate document lineage or access secure custody logs.\n"
                              "This alpha release is undergoing signal calibration for accredited forensic integration."))
 
@@ -192,12 +195,9 @@ else:
                 help="Court-grade document with embedded verification seal and QR trace"
             )
 
+        # Demo alpha disclaimer right below the button, subtle and italic
         st.markdown("""
-            <hr style='margin-top:30px;'>
-            <div style='text-align:center; font-size:12px; color:#999; font-style: italic; margin-bottom: 15px;'>
-                <em>This system is currently in alpha demonstration mode. Full multi-signal forensic analysis is undergoing validation for accredited deployment.</em>
-            </div>
-            <div style='text-align:center; font-size:12px; color:#999;'>
-                TruthMark-Aurion v0.4 • Deployed: 2025-07-02 by Sebastian
+            <div style='text-align:center; font-size:13px; color:#999; font-style: italic; margin-top:10px; margin-bottom: 30px;'>
+                This system is currently in alpha demonstration mode. Full multi-signal forensic analysis is undergoing validation for accredited deployment.
             </div>
         """, unsafe_allow_html=True)
