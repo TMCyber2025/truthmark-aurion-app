@@ -1,7 +1,5 @@
-
 streamlit
-opencv-python-headless
-matplotlib
 numpy
+matplotlib
 fpdf
-
+qrcode
