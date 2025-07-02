@@ -194,6 +194,9 @@ else:
 
         st.markdown("""
             <hr style='margin-top:30px;'>
+            <div style='text-align:center; font-size:12px; color:#999; font-style: italic; margin-bottom: 15px;'>
+                <em>This system is currently in alpha demonstration mode. Full multi-signal forensic analysis is undergoing validation for accredited deployment.</em>
+            </div>
             <div style='text-align:center; font-size:12px; color:#999;'>
                 TruthMark-Aurion v0.4 • Deployed: 2025-07-02 by Sebastian
             </div>
