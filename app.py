@@ -7,7 +7,7 @@ import hashlib
 import qrcode
 import random
 
-# ===================== UTILITY =====================
+# ======= UTILITIES =======
 def utc_now():
     return datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -15,13 +15,13 @@ def generate_hash(text):
     return hashlib.sha256(text.encode()).hexdigest()[:32]
 
 def generate_qr_code(data, filename):
-    qr = qrcode.QRCode(version=1, box_size=5, border=2)
+    qr = qrcode.QRCode(version=1, box_size=6, border=2)
     qr.add_data(data)
     qr.make(fit=True)
     img = qr.make_image(fill_color='black', back_color='white')
     img.save(filename)
 
-# ===================== PLOTTING =====================
+# ======= PLOTTING =======
 def create_forensic_multiplot(filename):
     x = np.linspace(0, 2600, 100)
     y1 = np.sin(x / 400) + np.random.normal(0, 0.1, 100)
@@ -35,31 +35,30 @@ def create_forensic_multiplot(filename):
     scatter_y = 0.5 - 0.4 * scatter_x + np.random.normal(0, 0.05, 30)
 
     fig, axs = plt.subplots(3, 1, figsize=(10, 10))
-
-    axs[0].plot(x, y1, label='Truth Indicators', color='#5dade2')
-    axs[0].plot(x, y2, label='Stress Markers', color='#e67e22')
-    axs[0].plot(x, y3, label='Baseline', color='#2ecc71')
-    axs[0].set_title("Forensic Signal Comparison")
+    axs[0].plot(x, y1, label='Truth Indicators', color='#2c3e50', linewidth=2)
+    axs[0].plot(x, y2, label='Stress Markers', color='#e74c3c', linewidth=2)
+    axs[0].plot(x, y3, label='Baseline', color='#27ae60', linewidth=2)
+    axs[0].set_title("Forensic Signal Comparison", fontsize=16, fontweight='bold')
     axs[0].legend()
 
     width = 0.35
-    axs[1].bar(np.arange(3) - width / 2, means_group1, width, label='Cluster A', color='#9b59b6')
-    axs[1].bar(np.arange(3) + width / 2, means_group2, width, label='Cluster B', color='#3498db')
+    axs[1].bar(np.arange(3) - width / 2, means_group1, width, label='Cluster A', color='#8e44ad')
+    axs[1].bar(np.arange(3) + width / 2, means_group2, width, label='Cluster B', color='#2980b9')
     axs[1].set_xticks(range(3))
-    axs[1].set_xticklabels(['Truth', 'Stress', 'Baseline'])
+    axs[1].set_xticklabels(['Truth', 'Stress', 'Baseline'], fontsize=12)
     axs[1].legend()
-    axs[1].set_title("Group Cluster Mean Signals")
+    axs[1].set_title("Group Cluster Mean Signals", fontsize=16, fontweight='bold')
 
-    axs[2].scatter(scatter_x, scatter_y, color='#e74c3c')
+    axs[2].scatter(scatter_x, scatter_y, color='#f39c12', edgecolor='black', s=70)
     m, b = np.polyfit(scatter_x, scatter_y, 1)
-    axs[2].plot(scatter_x, m * scatter_x + b, color='black', linestyle='--')
-    axs[2].set_title("TruthMatch vs Deviation")
+    axs[2].plot(scatter_x, m * scatter_x + b, color='black', linestyle='--', linewidth=1.5)
+    axs[2].set_title("TruthMatch vs Deviation", fontsize=16, fontweight='bold')
 
     plt.tight_layout()
     plt.savefig(filename, facecolor='white', bbox_inches='tight')
     plt.close()
 
-# ===================== PDF REPORT =====================
+# ======= PDF REPORT =======
 def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     timestamp = utc_now()
     seal_hash = generate_hash(video_name + timestamp)
@@ -68,66 +67,72 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.set_auto_page_break(auto=False)
     pdf.add_page()
 
-    pdf.set_font("Times", "B", 18)
-    pdf.cell(0, 10, "TruthMark-Aurion Digital Forensics", ln=True, align="C")
+    pdf.set_font("Times", "B", 20)
+    pdf.set_text_color(44, 62, 80)  # dark blue-grey
+    pdf.cell(0, 12, "TruthMark-Aurion Digital Forensics", ln=True, align="C")
 
-    pdf.set_font("Times", "I", 14)
-    pdf.cell(0, 8, "Guardian of the Truth", ln=True, align="C")
+    pdf.set_font("Times", "I", 16)
+    pdf.cell(0, 10, "Guardian of the Truth", ln=True, align="C")
+
+    pdf.set_font("Times", "", 12)
+    pdf.cell(0, 8, f"Video: {video_name}", ln=True, align="C")
+    pdf.cell(0, 8, f"Generated: {timestamp} UTC", ln=True, align="C")
+    pdf.cell(0, 8, f"TruthMatch Score: {truth_score:.1f}%", ln=True, align="C")
+
+    pdf.ln(6)
+    pdf.image(fig_img, x=15, w=180)
+    pdf.ln(4)
 
     pdf.set_font("Times", "", 10)
-    pdf.cell(0, 6, f"Video: {video_name}", ln=True, align="C")
-    pdf.cell(0, 6, f"Generated: {timestamp} UTC", ln=True, align="C")
-    pdf.cell(0, 6, f"TruthMatch Score: {truth_score:.1f}%", ln=True, align="C")
-
-    pdf.ln(4)
-    pdf.image(fig_img, x=15, w=180)
-    pdf.ln(2)
-
-    pdf.set_font("Times", "", 8)
-    pdf.multi_cell(0, 4,
+    pdf.multi_cell(0, 6,
         "Methodology: Simulated biometric signals were analyzed across truth, stress, and baseline markers. "
         "Cluster means and regression deviation metrics were calculated to derive a composite confidence score.\n\n"
         f"Conclusion: The analyzed data aligns with truthful signal profiles. Score of {truth_score:.1f}% suggests "
         "high forensic confidence and minimal deviation from baseline norms.")
 
-    pdf.ln(4)
-    pdf.set_font("Times", "I", 7)
-    pdf.cell(0, 4, f"Verification Seal: {seal_hash}", ln=True, align="C")
-    pdf.cell(0, 4, "TruthMark-Aurion • Cryptographic Artifact Chain", ln=True, align="C")
-    pdf.image(qr_img, x=80, w=50)
+    pdf.ln(8)
+    pdf.set_font("Times", "I", 8)
+    pdf.set_text_color(127, 140, 141)  # muted grey
+    pdf.cell(0, 6, f"Verification Seal: {seal_hash}", ln=True, align="C")
+    pdf.cell(0, 6, "TruthMark-Aurion • Cryptographic Artifact Chain", ln=True, align="C")
+    pdf.image(qr_img, x=75, w=60)
 
-    pdf.multi_cell(0, 3,
+    pdf.multi_cell(0, 5,
         "Scan the QR code to validate document lineage or access secure custody logs.\n"
         "This alpha release is undergoing signal calibration for accredited forensic integration.")
+
     pdf.output(pdf_path)
 
-# ===================== STREAMLIT UI =====================
+# ======= STREAMLIT UI =======
 st.set_page_config(page_title="TruthMark-Aurion", layout="centered")
 
 if "show_upload" not in st.session_state:
     st.session_state.show_upload = False
 
 if not st.session_state.show_upload:
-    st.markdown("<h1 style='text-align:center;'>TruthMark-Aurion</h1>", unsafe_allow_html=True)
-    st.markdown("<h2 style='text-align:center; color:#555;'>Guardian of the Truth</h2>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align:center; color:#888;'>Quantum Overseer</h4>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center; font-family:Helvetica, sans-serif;'>TruthMark-Aurion</h1>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; color:#34495e; font-family:Helvetica, sans-serif;'>Guardian of the Truth</h2>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align:center; color:#7f8c8d; font-family:Helvetica, sans-serif;'>Quantum Overseer</h4>", unsafe_allow_html=True)
     st.markdown("""
         <style>
         div.stButton > button {
             display: block;
-            margin: auto;
-            font-size: 20px;
-            padding: 14px 50px;
+            margin: 40px auto;
+            font-size: 22px;
+            padding: 18px 60px;
             background-color: #3498db;
             color: white;
-            border-radius: 10px;
+            border-radius: 15px;
             border: none;
-            transition: background-color 0.3s ease;
+            font-weight: 700;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.6);
         }
         div.stButton > button:hover {
             background-color: #2980b9;
             cursor: pointer;
-            box-shadow: 0 6px 12px rgba(41, 128, 185, 0.6);
+            box-shadow: 0 8px 25px rgba(41, 128, 185, 0.8);
+            transform: translateY(-3px);
         }
         </style>
     """, unsafe_allow_html=True)
@@ -136,7 +141,7 @@ if not st.session_state.show_upload:
         st.session_state.show_upload = True
 
 else:
-    st.markdown("## Upload Analysis Input")
+    st.markdown("## Upload Your Video for Analysis")
     uploaded_file = st.file_uploader("Choose a video file", type=["mp4", "mov", "avi", "mpeg4"])
 
     if uploaded_file:
@@ -175,9 +180,9 @@ else:
                 help="Court-grade document with embedded verification seal and QR trace"
             )
 
-        st.markdown(f"""
-            <hr style='margin-top:30px;'>
-            <div style='text-align:center; font-size:12px; color:#999;'>
+        st.markdown("""
+            <hr style="margin-top:40px;">
+            <div style="text-align:center; font-size:12px; color:#999;">
                 TruthMark-Aurion v0.4 • © Sebastian Andrews 2025
             </div>
         """, unsafe_allow_html=True)
