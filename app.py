@@ -66,7 +66,9 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.add_page()
 
     pdf.set_font("Times", "B", 18)
-    pdf.cell(0, 10, "TruthMark-Aurion Digital Forensic Report ✅ NEW FLOW", ln=True, align="C")
+    pdf.cell(0, 10, "TruthMark-Aurion: Guardian of Truth", ln=True, align="C")
+    pdf.set_font("Times", "I", 12)
+    pdf.cell(0, 8, "Powered by Quantum Overseer", ln=True, align="C")
 
     pdf.set_font("Times", "", 9)
     pdf.cell(0, 5, f"Video: {video_name}", ln=True, align="C")
@@ -79,9 +81,9 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
 
     pdf.set_font("Times", "", 8)
     pdf.multi_cell(0, 4,
-        "Methodology: Multi-signal simulated biometric analysis was conducted across truth, stress, and baseline markers. "
-        "Cluster means and deviation regressions were calculated for composite scoring.\n\n"
-        f"Conclusion: The data indicates alignment with truthful norms, yielding a TruthMatch Score of "
+        "Methodology: Multi-signal simulated biometric analysis across truth, stress, and baseline markers. "
+        "Cluster means and deviation regressions calculated for composite scoring.\n\n"
+        f"Conclusion: Data alignment with truthful norms, yielding a TruthMatch Score of "
         f"{truth_score:.1f}%, supporting high forensic confidence with no significant deception signals."
     )
 
@@ -93,22 +95,25 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     pdf.image(qr_img, x=80, w=50)
     pdf.multi_cell(0, 3,
         "Scan QR to validate document chain or access secure chain-of-custody logs. "
-        "This system is currently in alpha demonstration mode undergoing multi-signal forensic validation."
+        "This system is in alpha demonstration undergoing multi-signal forensic validation."
     )
     pdf.output(pdf_path)
 
 # ============ STREAMLIT ============
-st.set_page_config(page_title="TruthMark-Aurion Start ✅", layout="centered")
-st.title("TruthMark-Aurion Forensics Start ✅ NEW FLOW")
-
+st.set_page_config(page_title="TruthMark-Aurion: Guardian of Truth", layout="centered")
 if "show_upload" not in st.session_state:
     st.session_state.show_upload = False
 
 if not st.session_state.show_upload:
-    if st.button("🚀 START FORENSIC ANALYSIS", help="Click to begin multi-signal upload & analysis"):
+    st.markdown("<h1 style='text-align:center;'>TruthMark-Aurion: Guardian of Truth</h1>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align:center; color:#888;'>Powered by Quantum Overseer</h3>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center; padding:30px;'>"
+                "<button style='font-size:20px; padding:15px 30px; background-color:#3498db; color:white; border:none; border-radius:8px; cursor:pointer;' "
+                "onclick='window.location.reload();'>START FORENSIC ANALYSIS</button></div>", unsafe_allow_html=True)
+    if st.button("🚀 Or Click Here to Start"):
         st.session_state.show_upload = True
 else:
-    st.title("TruthMark-Aurion Digital Forensics ✅ NEW LIVE")
+    st.title("TruthMark-Aurion Digital Forensics")
     st.write("Upload your video to generate a secure, court-grade digital forensic summary with upgraded QR and dynamic scoring.")
 
     uploaded_file = st.file_uploader("Upload video file", type=["mp4", "mov", "avi", "mpeg4"])
