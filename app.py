@@ -7,6 +7,7 @@ import hashlib
 import qrcode
 import random
 import os
+from PIL import Image
 
 # ===================== UTILITY =====================
 def utc_now():
@@ -65,27 +66,31 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
     timestamp = utc_now()
     seal_hash = generate_hash(video_name + timestamp)
 
-    # Safety check - images must exist
-    if not os.path.isfile(fig_img):
-        raise FileNotFoundError(f"Plot image not found: {fig_img}")
-    if not os.path.isfile(qr_img):
-        raise FileNotFoundError(f"QR code image not found: {qr_img}")
+    # Verify and force save images as PNG to avoid encoding issues
+    for path in [fig_img, qr_img]:
+        if not os.path.isfile(path):
+            raise FileNotFoundError(f"Image not found: {path}")
+        img = Image.open(path)
+        img.save(path, format='PNG')
 
     pdf = FPDF('P', 'mm', 'A4')
     pdf.set_auto_page_break(auto=False)
     pdf.add_page()
 
+    def safe_text(text):
+        return text.encode('latin1', 'replace').decode('latin1')
+
     pdf.set_font("Times", "B", 20)
-    pdf.set_text_color(44, 62, 80)  # dark blue-grey
-    pdf.cell(0, 12, "TruthMark-Aurion Digital Forensics", ln=True, align="C")
+    pdf.set_text_color(44, 62, 80)
+    pdf.cell(0, 12, safe_text("TruthMark-Aurion Digital Forensics"), ln=True, align="C")
 
     pdf.set_font("Times", "I", 14)
-    pdf.cell(0, 8, "Guardian of the Truth", ln=True, align="C")
+    pdf.cell(0, 8, safe_text("Guardian of the Truth"), ln=True, align="C")
 
     pdf.set_font("Times", "", 10)
-    pdf.cell(0, 6, f"Video: {video_name}", ln=True, align="C")
-    pdf.cell(0, 6, f"Generated: {timestamp} UTC", ln=True, align="C")
-    pdf.cell(0, 6, f"TruthMatch Score: {truth_score:.1f}%", ln=True, align="C")
+    pdf.cell(0, 6, safe_text(f"Video: {video_name}"), ln=True, align="C")
+    pdf.cell(0, 6, safe_text(f"Generated: {timestamp} UTC"), ln=True, align="C")
+    pdf.cell(0, 6, safe_text(f"TruthMatch Score: {truth_score:.1f}%"), ln=True, align="C")
 
     pdf.ln(4)
     pdf.image(fig_img, x=15, w=180)
@@ -93,20 +98,21 @@ def generate_pdf_report(video_name, fig_img, qr_img, pdf_path, truth_score):
 
     pdf.set_font("Times", "", 8)
     pdf.multi_cell(0, 4,
-        "Methodology: Simulated biometric signals were analyzed across truth, stress, and baseline markers. "
-        "Cluster means and regression deviation metrics were calculated to derive a composite confidence score.\n\n"
-        f"Conclusion: The analyzed data aligns with truthful signal profiles. Score of {truth_score:.1f}% suggests "
-        "high forensic confidence and minimal deviation from baseline norms.")
+        safe_text("Methodology: Simulated biometric signals were analyzed across truth, stress, and baseline markers. "
+                  "Cluster means and regression deviation metrics were calculated to derive a composite confidence score.\n\n"
+                  f"Conclusion: The analyzed data aligns with truthful signal profiles. Score of {truth_score:.1f}% suggests "
+                  "high forensic confidence and minimal deviation from baseline norms."))
 
     pdf.ln(4)
     pdf.set_font("Times", "I", 7)
-    pdf.cell(0, 4, f"Verification Seal: {seal_hash}", ln=True, align="C")
-    pdf.cell(0, 4, "TruthMark-Aurion • Cryptographic Artifact Chain", ln=True, align="C")
+    pdf.cell(0, 4, safe_text(f"Verification Seal: {seal_hash}"), ln=True, align="C")
+    pdf.cell(0, 4, safe_text("TruthMark-Aurion • Cryptographic Artifact Chain"), ln=True, align="C")
     pdf.image(qr_img, x=75, w=60)
 
     pdf.multi_cell(0, 3,
-        "Scan the QR code to validate document lineage or access secure custody logs.\n"
-        "This alpha release is undergoing signal calibration for accredited forensic integration.")
+                   safe_text("Scan the QR code to validate document lineage or access secure custody logs.\n"
+                             "This alpha release is undergoing signal calibration for accredited forensic integration."))
+
     pdf.output(pdf_path)
 
 # ===================== STREAMLIT UI =====================
@@ -124,16 +130,21 @@ if not st.session_state.show_upload:
         div.stButton > button {
             display: block;
             margin: auto;
-            font-size: 20px;
-            padding: 14px 50px;
+            font-size: 22px;
+            padding: 16px 60px;
             background-color: #3498db;
             color: white;
-            border-radius: 10px;
+            border-radius: 12px;
             border: none;
-            transition: background-color 0.3s ease;
+            font-weight: 700;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.6);
         }
         div.stButton > button:hover {
             background-color: #2980b9;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(41, 128, 185, 0.8);
+            transform: translateY(-3px);
         }
         </style>
     """, unsafe_allow_html=True)
@@ -181,7 +192,7 @@ else:
                 help="Court-grade document with embedded verification seal and QR trace"
             )
 
-        st.markdown(f"""
+        st.markdown("""
             <hr style='margin-top:30px;'>
             <div style='text-align:center; font-size:12px; color:#999;'>
                 TruthMark-Aurion v0.4 • Deployed: 2025-07-02 by Sebastian
