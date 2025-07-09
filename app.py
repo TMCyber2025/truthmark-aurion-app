@@ -9,50 +9,53 @@ from datetime import datetime
 # ===== CONFIG =====
 st.set_page_config(page_title="TruthMark-Aurion", page_icon="🧬", layout="centered")
 
-# ===== SESSION STATE =====
 if "analysis_complete" not in st.session_state:
     st.session_state.analysis_complete = False
 
-# ===== CUSTOM CSS: NEON LAB LOOK =====
+# ===== CUSTOM CSS =====
 st.markdown("""
 <style>
     body { background-color: #0a0a0a; color: #e0e0e0; }
-    .main-title {
+    .title {
         font-family: 'Courier New', monospace;
-        font-size: 48px;
+        font-size: 50px;
         color: #00f5d4;
         text-align: center;
         margin-top: 30px;
         text-shadow: 0 0 10px #00f5d4, 0 0 20px #00f5d4;
     }
     .subtitle {
-        font-size: 20px;
-        color: #888;
         text-align: center;
+        font-size: 20px;
+        color: #aaa;
         margin-bottom: 30px;
     }
-    .upload-box {
-        background: #111;
-        border: 1px solid #333;
-        border-radius: 12px;
-        padding: 30px;
+    .upload-area {
+        border: 2px dashed #00f5d4;
+        padding: 40px;
+        border-radius: 15px;
         text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin: 0 auto;
         width: 90%;
-        max-width: 500px;
-        margin: 0 auto 40px auto;
+        max-width: 450px;
     }
-    .upload-box h3 {
+    .upload-area:hover {
+        background-color: rgba(0,245,212,0.05);
+        box-shadow: 0 0 20px #00f5d4;
+    }
+    .upload-text {
+        font-size: 18px;
         color: #00f5d4;
-        font-size: 24px;
-        margin-bottom: 10px;
     }
     .scanner {
         width: 100%;
-        height: 10px;
+        height: 12px;
         background: linear-gradient(90deg, transparent, #00f5d4, transparent);
         animation: scan 1.5s infinite linear;
-        border-radius: 5px;
-        margin-top: 20px;
+        border-radius: 6px;
+        margin: 20px 0;
     }
     @keyframes scan {
         0% { background-position: 0% }
@@ -83,32 +86,31 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ===== TITLE =====
-st.markdown("<div class='main-title'>TruthMark-Aurion</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>Multi-Modal Quantum Forensic Analysis</div>", unsafe_allow_html=True)
+# ===== HEADER =====
+st.markdown("<div class='title'>TruthMark-Aurion</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>Quantum Multi-Modal Integrity Analysis</div>", unsafe_allow_html=True)
 
-# ===== UPLOAD =====
+# ===== CUSTOM UPLOAD ZONE =====
+uploaded_file = st.file_uploader("", type=["mp4", "mov", "avi"], label_visibility="collapsed")
 st.markdown("""
-<div class='upload-box'>
-    <h3>🧬 Upload Forensic Footage</h3>
-    <p style='color:#aaa'>Formats: .mp4 | .mov | .avi</p>
+<div class="upload-area" onclick="document.querySelector('input[type=file]').click()">
+    <div class="upload-text">🧬 Drag & Drop Forensic File Here or Click to Browse</div>
+    <div style='color:#aaa; font-size:13px;'>Accepted: .mp4, .mov, .avi</div>
 </div>
 """, unsafe_allow_html=True)
 
-video_file = st.file_uploader("", type=["mp4", "mov", "avi"])
-
 # ===== ANALYSIS SEQUENCE =====
-if video_file and not st.session_state.analysis_complete:
-    st.video(video_file)
+if uploaded_file and not st.session_state.analysis_complete:
+    st.video(uploaded_file)
     st.markdown("<div class='scanner'></div>", unsafe_allow_html=True)
-    st.info("🧠 Initiating biometric-linguistic multi-layer scan...")
+    st.info("🧠 Initiating multi-layer biometric integrity scan...")
 
     logs = [
         "> Establishing subject baseline...",
-        "> Calibrating micro-expression lattice...",
-        "> Mapping neural pause clusters...",
-        "> Cross-referencing stress variances...",
-        "> Finalizing integrity synthesis..."
+        "> Calibrating micro-expression nodes...",
+        "> Mapping neural temporal clusters...",
+        "> Cross-referencing variance anomalies...",
+        "> Synthesizing integrity matrix..."
     ]
 
     progress = st.empty()
@@ -129,12 +131,17 @@ if video_file and not st.session_state.analysis_complete:
 
     likelihood_display.markdown("**Truth Likelihood:** 99.9%")
     log_area.markdown("> Analysis complete. Integrity stable.")
-
     st.session_state.analysis_complete = True
 
 # ===== RESULTS =====
 if st.session_state.analysis_complete:
-    st.markdown("<div class='verdict'><h2>VERDICT: TRUTHFUL ✅</h2><p>Signal integrity exceptionally high. No deception markers detected.</p><p style='color:#f55'>⚠ Demo output. Not certified.</p></div>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class='verdict'>
+        <h2>VERDICT: TRUTHFUL ✅</h2>
+        <p>Signal integrity exceptionally high. No deception markers detected.</p>
+        <p style='color:#f55'>⚠ Demo output. Not legally certified.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     x = np.linspace(0, 10, 100)
     y = np.sin(x) + np.random.normal(0, 0.1, 100)
@@ -155,4 +162,4 @@ if st.session_state.analysis_complete:
             st.download_button("📄 Download Integrity Report PDF", f, file_name="TruthMark-Aurion-Report.pdf")
 
 # ===== FOOTER =====
-st.markdown("<div class='footer'>TruthMark-Aurion © 2025 | Media encrypted & expunged post-analysis. Simulated forensic chain for demonstration.</div>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>TruthMark-Aurion © 2025 | Media encrypted & expunged post-analysis. Forensic chain simulated for demonstration.</div>", unsafe_allow_html=True)
