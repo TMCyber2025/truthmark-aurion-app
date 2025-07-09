@@ -3,3 +3,4 @@ numpy
 matplotlib
 fpdf
 qrcode
+opencv-python-headless
