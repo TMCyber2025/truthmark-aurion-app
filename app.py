@@ -9,11 +9,12 @@ from datetime import datetime
 # =============== PAGE CONFIG ===============
 st.set_page_config(page_title="TruthMark-Aurion", page_icon=":shield:", layout="centered")
 
-# =============== HEADER & LOGO ===============
+# =============== HEADER & TAGLINE ===============
 st.markdown("""
     <h1 style='text-align: center; color: #00FFAA;'>TruthMark-Aurion</h1>
     <h3 style='text-align: center;'>Guardian of the Truth</h3>
     <h4 style='text-align: center; color: #AAAAAA;'>Quantum Overseer</h4>
+    <p style='text-align: center; color: #AAAAAA; margin-top: -10px;'>333 forensic sensors. Full truth PDF generated.</p>
     <hr>
 """, unsafe_allow_html=True)
 
@@ -67,4 +68,9 @@ if st.session_state.analysis_complete:
 
 # =============== FOOTER ===============
 st.markdown("---")
-st.markdown("<p style='text-align: center; color: #666;'>© TruthMark-Aurion 2025 | Sebastian Andrews</p>", unsafe_allow_html=True)
+st.markdown("""
+    <div style='text-align: center; color: #666; font-size: 0.85em;'>
+        © 2025 TruthMark-Aurion | Sebastian Andrews<br>
+        Data encrypted during analysis and securely purged after report generation.
+    </div>
+""", unsafe_allow_html=True)
