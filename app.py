@@ -13,7 +13,7 @@ st.set_page_config(page_title="TruthMark-Aurion", page_icon="⚡", layout="wide"
 if "analysis_complete" not in st.session_state:
     st.session_state.analysis_complete = False
 
-# ===== INTERFACE STYLING =====
+# ===== INTERFACE STYLING & KNIGHT RIDER =====
 st.markdown("""
     <style>
         html, body { background-color: #0a0f0f; color: #f5f5f5; }
@@ -34,17 +34,25 @@ st.markdown("""
             text-align: center;
             font-family: 'Courier New';
         }
-        .pulse-bar {
+        .scanner-container {
             width: 100%;
-            height: 12px;
-            background: linear-gradient(to right, #00e6b8 0%, #003b35 50%, #00e6b8 100%);
-            animation: pulse 1.8s infinite linear;
-            border-radius: 5px;
+            background: #111;
+            border: 1px solid #444;
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
             margin-top: 20px;
         }
-        @keyframes pulse {
-            0% { background-position: 0% }
-            100% { background-position: 200% }
+        .scanner-bar {
+            width: 25%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, #00e6b8, transparent);
+            animation: scanner 1.5s infinite;
+        }
+        @keyframes scanner {
+            0% { margin-left: -25%; }
+            50% { margin-left: 100%; }
+            100% { margin-left: -25%; }
         }
         .info-box { background-color: #111; padding: 20px; border-radius: 10px; text-align: center; border: 1px solid #333; }
         .info-box h3 { color: #00e6b8; }
@@ -65,8 +73,15 @@ video_file = st.file_uploader("", type=["mp4", "mov", "avi"])
 # ===== ANALYSIS SEQUENCE =====
 if video_file and not st.session_state.analysis_complete:
     st.video(video_file)
-    st.markdown("<div class='pulse-bar'></div>", unsafe_allow_html=True)
-    
+
+    # Knight Rider scanner starts now
+    st.markdown("""
+        <div class="scanner-container">
+            <div class="scanner-bar"></div>
+        </div>
+    """, unsafe_allow_html=True)
+    st.info("Scanning multi-layer biometric vectors...")
+
     progress = st.empty()
     log_area = st.empty()
     likelihood_display = st.empty()
@@ -82,7 +97,7 @@ if video_file and not st.session_state.analysis_complete:
     ]
 
     for i in range(100):
-        time.sleep(0.04)
+        time.sleep(0.035)
         progress.progress(i + 1)
 
         # Update likelihood every ~10%
