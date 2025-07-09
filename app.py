@@ -30,11 +30,6 @@ st.markdown("""
         color: #aaa;
         margin-bottom: 30px;
     }
-    .hidden-input {
-        visibility: hidden;
-        height: 0;
-        position: absolute;
-    }
     .upload-area {
         border: 2px dashed #00f5d4;
         padding: 40px;
@@ -95,8 +90,7 @@ st.markdown("""
 st.markdown("<div class='title'>TruthMark-Aurion</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Quantum Multi-Modal Integrity Analysis</div>", unsafe_allow_html=True)
 
-# ===== HIDDEN UPLOADER + STYLIZED DROP ZONE =====
-st.markdown("<input type='file' class='hidden-input'>", unsafe_allow_html=True)
+# ===== CUSTOM UPLOAD ZONE =====
 uploaded_file = st.file_uploader("", type=["mp4", "mov", "avi"], label_visibility="collapsed")
 st.markdown("""
 <div class="upload-area" onclick="document.querySelector('input[type=file]').click()">
@@ -119,12 +113,14 @@ if uploaded_file and not st.session_state.analysis_complete:
         "> Synthesizing integrity matrix..."
     ]
 
+    progress = st.empty()
     log_area = st.empty()
     likelihood_display = st.empty()
     likelihood = 0
 
     for i in range(100):
         time.sleep(0.03)
+        progress.progress(i + 1)
 
         if i % 20 == 0 and likelihood < 95:
             likelihood += 25
