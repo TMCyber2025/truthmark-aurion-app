@@ -113,14 +113,12 @@ if uploaded_file and not st.session_state.analysis_complete:
         "> Synthesizing integrity matrix..."
     ]
 
-    progress = st.empty()
     log_area = st.empty()
     likelihood_display = st.empty()
     likelihood = 0
 
     for i in range(100):
         time.sleep(0.03)
-        progress.progress(i + 1)
 
         if i % 20 == 0 and likelihood < 95:
             likelihood += 25
