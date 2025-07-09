@@ -51,6 +51,9 @@ if st.session_state.analysis_complete:
         <div style='background-color:#1e1e1e; padding: 20px; border-radius: 10px; text-align: center;'>
             <h2 style='color:#00FFAA;'>Verdict: TRUTHFUL</h2>
             <p>Based on current biometric & linguistic indicators. (Simulated sample)</p>
+            <p style='color:#ff6666; font-size: 0.9em; margin-top: 10px;'>
+                ⚠ This is a demonstration system. Reports are simulated and do not represent a legal or certified finding.
+            </p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -59,7 +62,7 @@ if st.session_state.analysis_complete:
         pdf = FPDF()
         pdf.add_page()
         pdf.set_font("Arial", size=12)
-        pdf.cell(200, 10, txt="TruthMark-Aurion Forensic Report", ln=True, align='C')
+        pdf.cell(200, 10, txt="TruthMark-Aurion Forensic Report (Demo)", ln=True, align='C')
         pdf.cell(200, 10, txt=f"Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True, align='C')
         pdf.cell(200, 10, txt="Verdict: TRUTHFUL (Sample)", ln=True, align='C')
         pdf.output(pdf_output.name)
@@ -71,6 +74,7 @@ st.markdown("---")
 st.markdown("""
     <div style='text-align: center; color: #666; font-size: 0.85em;'>
         © 2025 TruthMark-Aurion | Sebastian Andrews<br>
-        Data encrypted during analysis and securely purged after report generation.
+        This demonstration encrypts uploaded data and deletes it after analysis.<br>
+        Reports generated here are for demonstration purposes only.
     </div>
 """, unsafe_allow_html=True)
