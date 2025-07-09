@@ -9,16 +9,6 @@ import matplotlib.pyplot as plt
 
 # =============== PAGE CONFIG & STYLE ==============
 st.set_page_config(page_title="TruthMark-Aurion", page_icon=":shield:", layout="centered")
-st.markdown("""
-    <style>
-    body {
-        background-color: #0d0d0d;
-        color: #e6e6e6;
-    }
-    .css-1d391kg {background-color: #0d0d0d;}
-    .css-1v3fvcr {color: #e6e6e6;}
-    </style>
-""", unsafe_allow_html=True)
 
 # =============== HEADER & LOGO ==============
 st.markdown("<h1 style='text-align: center; color: #00FFAA;'>TruthMark-Aurion</h1>", unsafe_allow_html=True)
@@ -37,21 +27,25 @@ elif option == "Use Webcam":
     if st.button("Record via Webcam"):
         cap = cv2.VideoCapture(0)
         frames = []
-        st.info("Recording... Press 'Stop' to finish.")
+        st.info("Recording... Please wait 5 seconds...")
         start_time = time.time()
-        while time.time() - start_time < 5:  # record 5 seconds
+        while time.time() - start_time < 5:
             ret, frame = cap.read()
             if ret:
                 frames.append(frame)
                 st.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         cap.release()
-        temp_video = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
-        height, width, _ = frames[0].shape
-        out = cv2.VideoWriter(temp_video.name, cv2.VideoWriter_fourcc(*'mp4v'), 10, (width, height))
-        for f in frames:
-            out.write(f)
-        out.release()
-        video_file = temp_video
+
+        if frames:
+            temp_video = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
+            height, width, _ = frames[0].shape
+            out = cv2.VideoWriter(temp_video.name, cv2.VideoWriter_fourcc(*'mp4v'), 10, (width, height))
+            for f in frames:
+                out.write(f)
+            out.release()
+            video_file = temp_video
+        else:
+            st.error("No frames captured from webcam. Try again or check your camera.")
 
 # =============== PROCESS THE VIDEO ==============
 if video_file is not None:
