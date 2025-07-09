@@ -6,126 +6,153 @@ import matplotlib.pyplot as plt
 from fpdf import FPDF
 from datetime import datetime
 
-# === PAGE CONFIG ===
-st.set_page_config(page_title="TruthMark-Aurion", layout="centered")
+# ===== CONFIG =====
+st.set_page_config(page_title="TruthMark-Aurion", page_icon="🧬", layout="centered")
 
 if "analysis_complete" not in st.session_state:
     st.session_state.analysis_complete = False
 
-# === CLEAN CSS: FORENSIC BLUE THEME ===
+# ===== CUSTOM CSS: CLEAN LIGHT LAB STYLE =====
 st.markdown("""
 <style>
-    body {
-        background-color: #f8fbff;
-        color: #103d62;
-        font-family: 'Segoe UI', sans-serif;
+    html, body {
+        background-color: #f8f9fa; /* light lab grey */
+        color: #333;
     }
-    h1, h2 {
+    .title {
+        font-family: 'Courier New', monospace;
+        font-size: 48px;
+        color: #00c9a7;
         text-align: center;
-        color: #175e9d;
+        margin-top: 30px;
     }
-    .banner {
-        padding-top: 20px;
-        padding-bottom: 10px;
-    }
-    .upload-zone {
-        border: 2px dashed #175e9d;
-        background-color: #eff7ff;
-        padding: 30px;
-        border-radius: 15px;
+    .subtitle {
         text-align: center;
+        font-size: 20px;
+        color: #555;
         margin-bottom: 30px;
+    }
+    .upload-area {
+        border: 2px dashed #00c9a7;
+        padding: 40px;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
         transition: all 0.3s;
+        margin: 0 auto;
+        width: 90%;
+        max-width: 500px;
+        background: rgba(0,201,167,0.05);
     }
-    .upload-zone:hover {
-        box-shadow: 0 0 10px #9ecff2;
-        background-color: #e5f3ff;
+    .upload-area:hover {
+        background-color: rgba(0,201,167,0.1);
+        box-shadow: 0 0 10px #00c9a7;
     }
-    .pulse-bar {
-        height: 12px;
+    .upload-text {
+        font-size: 18px;
+        color: #00c9a7;
+    }
+    .scanner {
         width: 100%;
-        background: linear-gradient(90deg, #175e9d 0%, #9ecff2 50%, #175e9d 100%);
-        background-size: 200% 100%;
-        animation: pulse 1.8s infinite linear;
-        border-radius: 6px;
+        height: 10px;
+        background: linear-gradient(90deg, transparent, #00c9a7, transparent);
+        animation: scan 1.5s infinite linear;
+        border-radius: 5px;
         margin: 20px 0;
     }
-    @keyframes pulse {
+    @keyframes scan {
         0% { background-position: 0% }
         100% { background-position: 200% }
     }
     .verdict {
-        background-color: #dceefb;
-        border-left: 6px solid #175e9d;
-        padding: 20px;
-        border-radius: 8px;
-        margin-top: 30px;
+        background: #fff;
+        border: 2px solid #00c9a7;
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 0 15px #00c9a7;
+    }
+    .verdict h2 {
+        color: #00c9a7;
+        margin-bottom: 10px;
+    }
+    .verdict p {
+        color: #555;
+        font-size: 14px;
     }
     .footer {
         text-align: center;
-        font-size: 11px;
-        color: #3b5b7a;
+        color: #777;
+        font-size: 0.85em;
         margin-top: 50px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# === HEADER ===
-st.markdown("<div class='banner'><h1>TruthMark-Aurion</h1><h2>Iceflow Biometric Intelligence System</h2></div>", unsafe_allow_html=True)
+# ===== HEADER =====
+st.markdown("<div class='title'>TruthMark-Aurion</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>Quantum Forensic Analysis System</div>", unsafe_allow_html=True)
 
-# === FILE UPLOAD ===
+# ===== CUSTOM UPLOAD ZONE =====
 uploaded_file = st.file_uploader("", type=["mp4", "mov", "avi"], label_visibility="collapsed")
 st.markdown("""
-<div class="upload-zone">
-    🧬 Drag & Drop Subject Footage<br><small>Accepted formats: mp4, mov, avi</small>
+<div class="upload-area" onclick="document.querySelector('input[type=file]').click()">
+    <div class="upload-text">🧬 Drag & Drop Forensic File Here or Click to Browse</div>
+    <div style='color:#777; font-size:13px;'>Accepted: .mp4, .mov, .avi</div>
 </div>
 """, unsafe_allow_html=True)
 
-# === ANALYSIS LOGIC ===
+# ===== ANALYSIS SEQUENCE =====
 if uploaded_file and not st.session_state.analysis_complete:
     st.video(uploaded_file)
-    st.markdown("<div class='pulse-bar'></div>", unsafe_allow_html=True)
-    st.info("⏳ Activating biometric-linguistic signal sweep...")
+    st.markdown("<div class='scanner'></div>", unsafe_allow_html=True)
+    st.info("🧠 Running multi-modal biometric-linguistic integrity check...")
 
     logs = [
-        "• Establishing forensic baseline",
-        "• Scanning micro-expression vectors",
-        "• Assessing linguistic consistency",
-        "• Cross-referencing temporal anomalies",
-        "• Finalizing truth metric confidence"
+        "> Calibrating biometric baseline...",
+        "> Scanning micro-expressions...",
+        "> Mapping neural linguistic pauses...",
+        "> Cross-referencing stress markers...",
+        "> Finalizing integrity matrix..."
     ]
 
+    progress = st.empty()
     log_area = st.empty()
     likelihood_display = st.empty()
     likelihood = 0
 
     for i in range(100):
-        time.sleep(0.02)
+        time.sleep(0.03)
+        progress.progress(i + 1)
+
         if i % 20 == 0 and likelihood < 95:
             likelihood += 25
             likelihood_display.markdown(f"**Truth Likelihood:** {likelihood}%")
+
         if i // 20 < len(logs):
             log_area.markdown(logs[i // 20])
 
     likelihood_display.markdown("**Truth Likelihood:** 99.9%")
-    log_area.markdown("✅ Analysis complete. Integrity secure.")
+    log_area.markdown("> Forensic analysis complete. Integrity stable.")
     st.session_state.analysis_complete = True
 
-# === VERDICT OUTPUT ===
+# ===== RESULTS =====
 if st.session_state.analysis_complete:
     st.markdown("""
     <div class='verdict'>
-        <h2>Verdict: TRUTHFUL</h2>
-        <p>Signal integrity aligned with all biometric expectations. No deception indicators found.</p>
-        <p style='color:#b00; font-size: 12px;'>⚠ This demo is not legally certified or admissible.</p>
+        <h2>VERDICT: TRUTHFUL ✅</h2>
+        <p>Signal integrity exceptionally high. No deception markers detected.</p>
+        <p style='color:#f55'>⚠ Demo output. Not legally certified.</p>
     </div>
     """, unsafe_allow_html=True)
 
     x = np.linspace(0, 10, 100)
     y = np.sin(x) + np.random.normal(0, 0.1, 100)
-    plt.style.use('seaborn-white')
-    plt.plot(x, y, color="#175e9d", linewidth=2)
-    plt.title("Signal Noise Map", color="#175e9d")
+    plt.style.use('seaborn-whitegrid')
+    plt.plot(x, y, color="#00c9a7", linewidth=2)
+    plt.title("Neural Signal Trace", color="#555")
+    plt.tick_params(colors='#555')
+    plt.grid(color='#ccc')
     st.pyplot(plt)
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as pdf_output:
@@ -133,11 +160,11 @@ if st.session_state.analysis_complete:
         pdf.add_page()
         pdf.set_font("Arial", size=12)
         pdf.cell(200, 10, txt="TruthMark-Aurion | Integrity Report", ln=True, align='C')
-        pdf.cell(200, 10, txt=f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True, align='C')
+        pdf.cell(200, 10, txt=f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True, align='C')
         pdf.cell(200, 10, txt="Verdict: TRUTHFUL (Demo)", ln=True, align='C')
         pdf.output(pdf_output.name)
         with open(pdf_output.name, "rb") as f:
-            st.download_button("Download PDF Report", f, file_name="TruthMark-Aurion-Report.pdf")
+            st.download_button("📄 Download Integrity Report PDF", f, file_name="TruthMark-Aurion-Report.pdf")
 
-# === FOOTER ===
-st.markdown("<div class='footer'>TruthMark-Aurion © 2025 | Data purged post-evaluation. For demonstration use only.</div>", unsafe_allow_html=True)
+# ===== FOOTER =====
+st.markdown("<div class='footer'>TruthMark-Aurion © 2025 | Media encrypted & expunged post-analysis. Forensic chain simulated for demonstration.</div>", unsafe_allow_html=True)
