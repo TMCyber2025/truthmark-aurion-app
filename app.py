@@ -14,8 +14,9 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: url("https://raw.githubusercontent.com/TMCyber2025/truthmark-aurion-app/main/lady_justice.png") no-repeat center center fixed;
+        background: url("https://raw.githubusercontent.com/TMCyber2025/truthmark-aurion-app/main/lady_justice.jpg") no-repeat center center fixed;
         background-size: 50%;
+        filter: invert(1);
     }
     </style>
     """,
@@ -34,67 +35,4 @@ option = st.radio("Select input method:", ("Upload Video", "Use Webcam"))
 video_file = None
 
 if option == "Upload Video":
-    video_file = st.file_uploader("Upload a video file", type=["mp4", "mov", "avi"])
-elif option == "Use Webcam":
-    if st.button("Record via Webcam"):
-        cap = cv2.VideoCapture(0)
-        frames = []
-        st.info("Recording... Please wait 5 seconds...")
-        start_time = time.time()
-        while time.time() - start_time < 5:
-            ret, frame = cap.read()
-            if ret:
-                frames.append(frame)
-                st.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        cap.release()
-
-        if frames:
-            temp_video = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
-            height, width, _ = frames[0].shape
-            out = cv2.VideoWriter(temp_video.name, cv2.VideoWriter_fourcc(*'mp4v'), 10, (width, height))
-            for f in frames:
-                out.write(f)
-            out.release()
-            video_file = temp_video
-        else:
-            st.error("No frames captured from webcam. Try again or check your camera.")
-
-# =============== PROCESS THE VIDEO ==============
-if video_file is not None:
-    st.success("Video loaded. Starting forensic analysis...")
-    progress = st.progress(0)
-    for i in range(100):
-        time.sleep(0.02)
-        progress.progress(i+1)
-
-    # ===== SAMPLE FOR DEMO: RANDOM GRAPH =====
-    st.subheader("Forensic Signal Overview")
-    x = np.linspace(0, 10, 100)
-    y = np.sin(x) + np.random.normal(0, 0.1, 100)
-    plt.figure()
-    plt.plot(x, y)
-    st.pyplot(plt)
-
-    # ===== SAMPLE VERDICT =====
-    st.markdown(f"""
-        <div style='background-color:#1e1e1e; padding: 20px; border-radius: 10px; text-align: center;'>
-        <h2 style='color:#00FFAA;'>Verdict: TRUTHFUL</h2>
-        <p>Based on current biometric & linguistic indicators. (Simulated sample)</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-    # ===== PDF REPORT =====
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, txt="TruthMark-Aurion Forensic Report", ln=True, align='C')
-    pdf.cell(200, 10, txt=f"Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True, align='C')
-    pdf.cell(200, 10, txt="Verdict: TRUTHFUL (Sample)", ln=True, align='C')
-    pdf_output = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
-    pdf.output(pdf_output.name)
-    with open(pdf_output.name, "rb") as f:
-        st.download_button("Download Forensic PDF Report", f, file_name="TruthMark-Aurion-Report.pdf")
-
-# =============== FOOTER ==============
-st.markdown("---")
-st.markdown("<p style='text-align: center; color: #666;'>© TruthMark-Aurion 2025 | Sebastian Andrews</p>", unsafe_allow_html=True)
+    video_file = st.file_uploader("Upload a video file", ty
