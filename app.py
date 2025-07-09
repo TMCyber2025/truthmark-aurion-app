@@ -7,8 +7,20 @@ from fpdf import FPDF
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-# =============== PAGE CONFIG & STYLE ==============
+# =============== PAGE CONFIG & BACKGROUND WATERMARK ==============
 st.set_page_config(page_title="TruthMark-Aurion", page_icon=":shield:", layout="centered")
+
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: url("https://raw.githubusercontent.com/TMCyber2025/truthmark-aurion-app/main/lady_justice.png") no-repeat center center fixed;
+        background-size: 50%;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # =============== HEADER & LOGO ==============
 st.markdown("<h1 style='text-align: center; color: #00FFAA;'>TruthMark-Aurion</h1>", unsafe_allow_html=True)
