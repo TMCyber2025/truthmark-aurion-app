@@ -30,6 +30,11 @@ st.markdown("""
         color: #aaa;
         margin-bottom: 30px;
     }
+    .hidden-input {
+        visibility: hidden;
+        height: 0;
+        position: absolute;
+    }
     .upload-area {
         border: 2px dashed #00f5d4;
         padding: 40px;
@@ -90,7 +95,8 @@ st.markdown("""
 st.markdown("<div class='title'>TruthMark-Aurion</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Quantum Multi-Modal Integrity Analysis</div>", unsafe_allow_html=True)
 
-# ===== CUSTOM UPLOAD ZONE =====
+# ===== HIDDEN UPLOADER + STYLIZED DROP ZONE =====
+st.markdown("<input type='file' class='hidden-input'>", unsafe_allow_html=True)
 uploaded_file = st.file_uploader("", type=["mp4", "mov", "avi"], label_visibility="collapsed")
 st.markdown("""
 <div class="upload-area" onclick="document.querySelector('input[type=file]').click()">
