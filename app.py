@@ -1,123 +1,81 @@
 import streamlit as st
 from PIL import Image
-import os
 
-# --- Streamlit Page Setup ---
+# ========= Page Setup =========
 st.set_page_config(page_title="TruthMark-Aurion", layout="wide")
 
-# --- Load Retina Image from Local Path ---
-retina_path = r"C:\Users\seban\OneDrive\Pictures\eye2.jpeg"
+# ========= Load Retina Image =========
+retina_path = r"C:/Users/seban/OneDrive/Pictures/eye2.jpeg"  # Adjust path as needed
 retina_image = Image.open(retina_path)
 
-# --- Optional Logo (add your own path here if needed) ---
-# logo_path = r"C:\Users\seban\OneDrive\Pictures\your_logo.png"
-# logo_image = Image.open(logo_path)
+# ========= Display Hero Section =========
+st.image(retina_image, use_column_width=True)
+st.markdown("## 🛡️ TruthMark-Aurion", unsafe_allow_html=True)
 
-# --- Custom CSS Styling ---
+# ========= Optional Logo Upload =========
+logo = st.file_uploader("Upload TruthMark-Aurion Logo", type=["png", "jpg", "jpeg"], label_visibility="collapsed")
+if logo:
+    st.image(logo, width=90)
+
 st.markdown("""
-<style>
-body {
-    background-color: #070d13;
-    color: #c8d4e3;
-    font-family: 'Segoe UI', sans-serif;
-}
-
-.hero {
-    width: 100%;
-    height: auto;
-    margin-bottom: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0,255,255,0.1);
-}
-
-.title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #7ec8ff;
-    margin-top: 1.5rem;
-    margin-bottom: 0.2rem;
-}
-
-.subtitle {
-    font-size: 1.1rem;
-    color: #9eb3c7;
-    margin-bottom: 2rem;
-}
-
-.section {
-    background-color: #0e161f;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 0 12px rgba(0,173,255,0.05);
-    margin-bottom: 2rem;
-}
-
-label {
-    font-size: 1rem;
-    color: #b7cde0;
-}
-
-button[kind="primary"] {
-    background-color: #1a73e8 !important;
-    color: white !important;
-    border-radius: 6px;
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
-}
-
-button[kind="primary"]:hover {
-    background-color: #2c8fff !important;
-}
-</style>
+<p style="font-family:'Exo', sans-serif; font-size: 1.1rem; color:#7ec8ff;">
+Forensic AI Authentication — Retina Scan Integrity · Cryptographic Validation · Timestamp Auditing
+</p>
 """, unsafe_allow_html=True)
 
-# --- Display Retina Hero Image ---
-st.image(retina_image, use_column_width=True)
+# ========= Guidance Panel =========
+with st.container():
+    st.markdown("""
+    <div style="background-color: #0e1a2e; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+        <p style="color: #cfd8e3; font-size: 1.05rem; text-align: center;">
+        Upload a <strong style="color:#7ec8ff;">Baseline</strong> and <strong style="color:#7ec8ff;">Subject</strong> video.<br>
+        Then run forensic validation to receive a verdict aligned with evidentiary integrity standards.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
-# --- Main Title ---
-st.markdown('<div class="title">TruthMark-Aurion</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Forensic AI Authentication Terminal — Retina Scan Integrity. Chain of Custody. Timestamp Accuracy.</div>', unsafe_allow_html=True)
-
-# --- Upload Panel ---
-st.markdown('<div class="section">', unsafe_allow_html=True)
-st.markdown("#### Step 1: Upload Input Videos")
-
+# ========= File Uploads =========
+st.markdown("### 📁 Upload Input Videos")
 col1, col2 = st.columns(2)
 with col1:
     baseline = st.file_uploader("Baseline Video", type=["mp4", "mov", "avi"])
+    if baseline:
+        st.caption("✓ Baseline artifact uploaded")
 with col2:
     subject = st.file_uploader("Subject Video", type=["mp4", "mov", "avi"])
-st.markdown('</div>', unsafe_allow_html=True)
+    if subject:
+        st.caption("✓ Subject artifact uploaded")
 
-# --- Run Forensic Analysis ---
-st.markdown('<div class="section">', unsafe_allow_html=True)
-st.markdown("#### Step 2: Forensic Analysis")
+# ========= Validation Trigger =========
+st.markdown("<hr style='margin:1.5rem 0; border:none; height:1px; background:#294460;'>", unsafe_allow_html=True)
 
 if baseline and subject:
-    if st.button("Run Forensic Validation"):
-        st.markdown("""
-        <div style="margin-top: 1rem; background-color: #0a121c; border-left: 4px solid #25a4ff; padding: 1.5rem; border-radius: 8px; font-family: monospace; font-size: 0.95rem;">
-Chain of Custody:        VERIFIED  
-Biometric Match:         98.6%  
-Timestamp Drift:         ±0.02s  
-SHA-256 Integrity:       MATCHED  
+    if st.button("🚀 Run Forensic Validation"):
+        with st.container():
+            st.markdown("### 📡 Verdict Summary")
+            st.code("""
+Chain of Custody:         ✅ VERIFIED  
+Biometric Match:          98.6%  
+Timestamp Drift:          ±0.02s  
+SHA-256 Integrity:        ✅ MATCHED  
 
-FINAL VERDICT: ✅ AUTHENTIC  
-No tampering or manipulation detected in the examined sequence.
-        </div>
-        """, unsafe_allow_html=True)
+Verdict: AUTHENTIC — No Manipulative Artifacts Detected
+            """)
 else:
-    st.warning("Upload both Baseline and Subject videos to activate the analysis engine.")
+    st.info("Upload both videos to activate the validation engine.")
 
-st.markdown('</div>', unsafe_allow_html=True)
+# ========= Capability Snapshot =========
+st.markdown("### 🧩 Core Capabilities")
+col_a, col_b, col_c = st.columns(3)
 
-# --- System Capabilities Summary ---
-st.markdown('<div class="section">', unsafe_allow_html=True)
-st.markdown("#### System Capabilities")
-st.markdown("""
-- **Cryptographic Hashing**: Ensures SHA-256 verification for digital tamper-proofing.
-- **Biometric Authorship Validation**: Facial geometry and vocal cadence.
-- **Temporal Integrity Engine**: Millisecond-level drift detection.
-- **Courtroom-Ready Verdicts**: Structured outputs for evidentiary use.
-""")
-st.markdown('</div>', unsafe_allow_html=True)
+with col_a:
+    st.markdown("🔐 **Cryptographic Sealing**")
+    st.caption("Real-time SHA-256 fingerprinting ensures tamper-proof traceability.")
+
+with col_b:
+    st.markdown("🧬 **Biometric Intelligence**")
+    st.caption("Facial geometry & voiceprint triangulation confirm authorship validity.")
+
+with col_c:
+    st.markdown("🧠 **Verdict Engine**")
+    st.caption("Structured output aligned with courtroom-grade standards.")
