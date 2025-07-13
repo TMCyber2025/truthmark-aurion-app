@@ -2,15 +2,16 @@ import streamlit as st
 from PIL import Image
 import time
 from datetime import datetime
+import base64
 
-# ============================
-# Set background from a URL
-# ============================
-def set_bg_url(url):
+def set_bg(image_file):
+    with open(image_file, "rb") as f:
+        data = f.read()
+    encoded = base64.b64encode(data).decode()
     css = f"""
     <style>
     .stApp {{
-        background-image: url("{url}");
+        background-image: url("data:image/png;base64,{encoded}");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -19,17 +20,11 @@ def set_bg_url(url):
     """
     st.markdown(css, unsafe_allow_html=True)
 
-# ============================
-# MAIN APP
-# ============================
-set_bg_url("https://1drv.ms/i/c/ef5fd94b1e232d41/EXxpFIdYFQlLlhCjUykWSBEBFSreKcsw2nnFhjPR613Jsw?e=eOu8Jj")
+set_bg("eye2.png")
 
 st.markdown("<h1 style='color:#7ec8ff; font-family: monospace;'>TruthMark-Aurion</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='color:#cfd8e3; font-family: monospace;'>Guardian of the Truth</h4>", unsafe_allow_html=True)
 
-# ============================
-# Floating control panel
-# ============================
 with st.container():
     st.markdown("""
     <div style='background-color: rgba(10,20,30,0.8); padding: 2rem; border-radius: 10px;'>
@@ -60,8 +55,5 @@ with st.container():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-# ============================
-# Footer
-# ============================
 st.markdown("<hr style='border:1px solid #294460;'>", unsafe_allow_html=True)
 st.caption("© 2025 TruthMark-Aurion — Guardian of the Truth")
