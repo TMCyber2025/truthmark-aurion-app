@@ -26,7 +26,7 @@ def set_bg(image_file):
 # ============================
 # Main App
 # ============================
-set_bg("/mnt/data/eye2.jpeg")  # path to your uploaded image
+set_bg("eye2.jpeg")  # relative path to your image in same folder
 
 st.markdown("<h1 style='color:#7ec8ff; font-family: monospace;'>TruthMark-Aurion</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='color:#cfd8e3; font-family: monospace;'>Guardian of the Truth</h4>", unsafe_allow_html=True)
