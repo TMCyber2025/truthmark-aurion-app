@@ -1,28 +1,32 @@
-import random
-
-def validate_integrity(baseline_data, subject_data):
-    baseline_hash = baseline_data.get("baseline_hash")
-    subject_hash = subject_data.get("subject_hash")
-
-    if baseline_hash == subject_hash:
-        verdict = "Truthful"
-        confidence = "99.9%"
-        anomalies = ["✔️ No discrepancies found"]
-    else:
-        # DEMO: Randomly decide if it's deception or plausible truth
-        if random.random() > 0.4:  # 60% chance to still say "Deception"
-            verdict = "Deception"
-            confidence = "99.9%"
-            anomalies = ["⚠️ Hash mismatch – possible tampering"]
-        else:
-            verdict = "Truthful"
-            confidence = "99.9%"
-            anomalies = ["⚠️ Hash mismatch – inconclusive but plausibly authentic"]
-
-    return {
-        "verdict": verdict,
-        "confidence": confidence,
-        "baseline_hash": baseline_hash,
-        "subject_hash": subject_hash,
-        "anomalies": anomalies
-    }
+# 🔧 Custom Forensic Background Styling
+st.markdown("""
+    <style>
+        .stApp {
+            background-image: url("https://yourdomain.com/assets/bg-forensic-circuit.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: #0a1d2b; /* Fallback forensic blue */
+            color: white;
+        }
+        .block-container {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            background-color: rgba(10, 29, 43, 0.85);
+            border-radius: 10px;
+        }
+        h1, h2, h3 {
+            color: #f0f4f8;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .metric-label, .metric-value {
+            font-family: 'Exo', sans-serif;
+        }
+        .stButton>button {
+            background-color: #1976d2;
+            color: white;
+            border-radius: 6px;
+        }
+    </style>
+""", unsafe_allow_html=True)
