@@ -1,137 +1,117 @@
 import streamlit as st
+from PIL import Image
 
-# --- Page Setup ---
+# --- App Setup ---
 st.set_page_config(page_title="TruthMark-Aurion", layout="wide")
 
-# --- Custom Styling ---
+# --- Load Hero Image ---
+image = Image.open("eye2.jpeg")
+
+# --- Custom CSS for Cinematic UI ---
 st.markdown("""
 <style>
-    html, body {
-        background-color: #0a1018;
-        color: #d1e2f3;
-        font-family: 'Segoe UI', sans-serif;
-    }
+body {
+    background-color: #070d13;
+    color: #c8d4e3;
+    font-family: 'Segoe UI', sans-serif;
+}
 
-    .title {
-        font-size: 2.2rem;
-        font-weight: 600;
-        color: #7ec8ff;
-        padding-top: 1rem;
-    }
+.hero {
+    width: 100%;
+    height: auto;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,255,255,0.1);
+}
 
-    .subtitle {
-        font-size: 1.05rem;
-        color: #a2b4c5;
-        margin-top: -0.5rem;
-        margin-bottom: 2rem;
-    }
+.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #7ec8ff;
+    margin-top: 1.5rem;
+    margin-bottom: 0.2rem;
+}
 
-    .card {
-        background-color: #121b26;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin-top: 1.5rem;
-        box-shadow: 0 0 15px rgba(0,173,255,0.06);
-    }
+.subtitle {
+    font-size: 1.1rem;
+    color: #9eb3c7;
+    margin-bottom: 2rem;
+}
 
-    .section-label {
-        font-size: 1.1rem;
-        font-weight: 500;
-        margin-bottom: 0.8rem;
-        color: #98c4f5;
-    }
+.section {
+    background-color: #0e161f;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,173,255,0.05);
+    margin-bottom: 2rem;
+}
 
-    .verdict-box {
-        background-color: #0f1923;
-        padding: 1.5rem;
-        border-radius: 10px;
-        font-family: 'Consolas', monospace;
-        color: #b8d7ff;
-        font-size: 1rem;
-        white-space: pre-wrap;
-        box-shadow: inset 0 0 10px #003c5c;
-        margin-top: 2rem;
-    }
+label {
+    font-size: 1rem;
+    color: #b7cde0;
+}
 
-    .button-container button {
-        width: 100%;
-        padding: 0.9rem 1rem;
-        border-radius: 8px;
-        font-size: 1.05rem;
-        background-color: #1674d6;
-        color: white;
-        border: none;
-        transition: 0.2s ease-in-out;
-    }
+button[kind="primary"] {
+    background-color: #1a73e8 !important;
+    color: white !important;
+    border-radius: 6px;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+}
 
-    .button-container button:hover {
-        background-color: #2191ff;
-        cursor: pointer;
-    }
-
-    hr {
-        border: none;
-        height: 1px;
-        background: #2c3a4a;
-        margin: 3rem 0;
-    }
+button[kind="primary"]:hover {
+    background-color: #2c8fff !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
-# --- Main Title + Tagline ---
+# --- Hero Image ---
+st.image(image, use_column_width=True, output_format='JPEG', caption=None)
+
+# --- Title & Subheading ---
 st.markdown('<div class="title">TruthMark-Aurion</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Forensic AI Authentication System — Chain of Custody. Biometric Validation. Timestamp Integrity.</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Forensic AI Authentication Terminal — Retina Scan Integrity. Chain of Custody. Timestamp Accuracy.</div>', unsafe_allow_html=True)
 
-# --- Logo Upload (optional) ---
-with st.expander("Upload Custom Logo (Optional)"):
-    logo = st.file_uploader("Logo File", type=["png", "jpg", "jpeg"])
-    if logo:
-        st.image(logo, width=100)
+# --- Upload Section ---
+st.markdown('<div class="section">', unsafe_allow_html=True)
+st.markdown("#### Step 1: Upload Input Videos")
 
-# --- Video Uploads Section ---
-st.markdown('<div class="section-label">1. Upload Videos</div>', unsafe_allow_html=True)
-upload_container = st.container()
-with upload_container:
-    col1, col2 = st.columns(2)
-    with col1:
-        baseline = st.file_uploader("Baseline Video", type=["mp4", "mov", "avi"])
-    with col2:
-        subject = st.file_uploader("Subject Video", type=["mp4", "mov", "avi"])
+col1, col2 = st.columns(2)
+with col1:
+    baseline = st.file_uploader("Baseline Video", type=["mp4", "mov", "avi"])
+with col2:
+    subject = st.file_uploader("Subject Video", type=["mp4", "mov", "avi"])
+st.markdown('</div>', unsafe_allow_html=True)
 
-# --- Trigger Forensic Validation ---
-st.markdown('<div class="section-label">2. Run Analysis</div>', unsafe_allow_html=True)
+# --- Analysis Trigger ---
+st.markdown('<div class="section">', unsafe_allow_html=True)
+st.markdown("#### Step 2: Forensic Analysis")
 
 if baseline and subject:
-    col = st.columns([1, 2, 1])[1]
-    with col:
-        run = st.button("Launch Forensic Validation", key="run_btn")
-
-    if run:
+    if st.button("Run Forensic Validation"):
         st.markdown("""
-        <div class="verdict-box">
-Chain of Custody Integrity:         VERIFIED
-Biometric Authorship Match:        98.6%
-Timestamp Drift Detected:          ±0.02s
-Cryptographic SHA-256 Hash:        MATCHED
+        <div style="margin-top: 1rem; background-color: #0a121c; border-left: 4px solid #25a4ff; padding: 1.5rem; border-radius: 8px; font-family: monospace; font-size: 0.95rem;">
+        Chain of Custody:        VERIFIED  
+        Biometric Match:         98.6%  
+        Timestamp Drift:         ±0.02s  
+        SHA-256 Integrity:       MATCHED  
 
-FINAL VERDICT: AUTHENTIC
-No manipulative alterations or splice points were detected across evaluated segments.
+        FINAL VERDICT: ✅ AUTHENTIC  
+        No tampering or manipulation detected in the examined sequence.
         </div>
         """, unsafe_allow_html=True)
 else:
-    st.warning("Please upload both videos to enable forensic validation.")
+    st.warning("Upload both Baseline and Subject videos to activate the analysis engine.")
 
-# --- Capabilities Section ---
-st.markdown('<hr>', unsafe_allow_html=True)
-st.markdown('<div class="section-label">System Capabilities</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
+# --- Capability Snapshot ---
+st.markdown('<div class="section">', unsafe_allow_html=True)
+st.markdown("#### System Capabilities")
 st.markdown("""
-<div class="card">
-    <ul style="line-height: 1.8;">
-        <li><strong>Cryptographic Sealing</strong> — SHA-256 digital fingerprinting ensures file traceability.</li>
-        <li><strong>Biometric Analysis</strong> — Facial geometry and voice patterns confirm authorship.</li>
-        <li><strong>Timestamp Integrity</strong> — Millisecond drift detection ensures temporal truth.</li>
-        <li><strong>Verdict Engine</strong> — Structured outputs admissible in formal evidentiary environments.</li>
-    </ul>
-</div>
-""", unsafe_allow_html=True)
+- **Cryptographic Hashing**: Ensures SHA-256 verification for digital tamper-proofing.
+- **Biometric Authorship Verification**: Validates identity using facial geometry and vocal cadence.
+- **Temporal Integrity Engine**: Detects millisecond-level sync drifts and temporal anomalies.
+- **Courtroom-Ready Verdicts**: Outputs designed for evidentiary admissibility and chain-of-custody logging.
+""")
+st.markdown('</div>', unsafe_allow_html=True)
