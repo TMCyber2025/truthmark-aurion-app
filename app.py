@@ -1,17 +1,13 @@
+
 import streamlit as st
-from PIL import Image
 import time
 from datetime import datetime
-import base64
 
-def set_bg(image_file):
-    with open(image_file, "rb") as f:
-        data = f.read()
-    encoded = base64.b64encode(data).decode()
+def set_bg_url(url):
     css = f"""
     <style>
     .stApp {{
-        background-image: url("data:image/png;base64,{encoded}");
+        background-image: url("{url}");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -20,7 +16,8 @@ def set_bg(image_file):
     """
     st.markdown(css, unsafe_allow_html=True)
 
-set_bg("eye2.png")
+# ✅ Using direct online image URL — no local files needed
+set_bg_url("https://i.ibb.co/ZfDVRcs/eye2.jpg")
 
 st.markdown("<h1 style='color:#7ec8ff; font-family: monospace;'>TruthMark-Aurion</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='color:#cfd8e3; font-family: monospace;'>Guardian of the Truth</h4>", unsafe_allow_html=True)
