@@ -1,10 +1,15 @@
 # compare.py
 
 def validate_integrity(baseline_data, subject_data):
-    """Validate subject against baseline and generate a forensic verdict."""
+    """
+    Compares baseline and subject video data, returning a clear forensic verdict.
+    Verdict is either 'Truthful' or 'Deception' with 99.9% confidence.
+    """
+
     baseline_hash = baseline_data.get("baseline_hash")
     subject_hash = subject_data.get("subject_hash")
 
+    # Verdict Logic
     if baseline_hash == subject_hash:
         verdict = "Truthful"
         confidence = "99.9%"
