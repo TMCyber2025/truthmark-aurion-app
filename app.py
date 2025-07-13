@@ -1,8 +1,10 @@
-
 import streamlit as st
 import time
 from datetime import datetime
 
+# ============================
+# Set background from URL
+# ============================
 def set_bg_url(url):
     css = f"""
     <style>
@@ -16,20 +18,28 @@ def set_bg_url(url):
     """
     st.markdown(css, unsafe_allow_html=True)
 
-# ✅ Using direct online image URL — no local files needed
-set_bg_url("https://i.ibb.co/ZfDVRcs/eye2.jpg")
+# ✅ Your retina scan hosted on imgur (no watermark)
+set_bg_url("https://i.imgur.com/IgPa0OV.jpeg")
 
+# ============================
+# App Title & Subtitle
+# ============================
 st.markdown("<h1 style='color:#7ec8ff; font-family: monospace;'>TruthMark-Aurion</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='color:#cfd8e3; font-family: monospace;'>Guardian of the Truth</h4>", unsafe_allow_html=True)
 
+# ============================
+# Main container
+# ============================
 with st.container():
     st.markdown("""
     <div style='background-color: rgba(10,20,30,0.8); padding: 2rem; border-radius: 10px;'>
     """, unsafe_allow_html=True)
 
+    # File uploads
     baseline = st.file_uploader("📁 Upload Baseline Video", type=["mp4", "mov", "avi"])
     subject = st.file_uploader("🎯 Upload Subject Video", type=["mp4", "mov", "avi"])
 
+    # Forensic validation
     if baseline and subject:
         if st.button("🚀 Run Forensic Validation"):
             with st.spinner("Running multi-channel forensic analysis..."):
@@ -52,5 +62,8 @@ with st.container():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
+# ============================
+# Footer
+# ============================
 st.markdown("<hr style='border:1px solid #294460;'>", unsafe_allow_html=True)
 st.caption("© 2025 TruthMark-Aurion — Guardian of the Truth")
