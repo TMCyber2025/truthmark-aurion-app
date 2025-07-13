@@ -3,6 +3,13 @@
 import streamlit as st
 from engine import run_demo
 from upload_webcam import capture_webcam
+from output import (
+    display_verdict,
+    display_hashes,
+    display_anomalies,
+    display_progress,
+    preview_videos,
+)
 import os
 
 # 🚀 Page Config
@@ -112,40 +119,9 @@ if st.button("Run Forensic Validation"):
             st.error("⚠️ No valid validation result returned. Please check input files.")
             st.stop()
 
-        # 🎯 Display Result
-        verdict = result.get("verdict", "Undetermined")
-        confidence = result.get("confidence", "N/A")
-        anomalies = result.get("anomalies", [])
-        baseline_hash = result.get("baseline_hash", "")
-        subject_hash = result.get("subject_hash", "")
-
-        st.subheader("🧠 Validation Outcome")
-        st.markdown(f"### Verdict: **{verdict}**")
-        st.metric(label="Confidence Score", value=confidence)
-
-        if verdict.lower() == "truthful":
-            st.success("✅ Evidence aligns with baseline. No discrepancies detected.")
-        elif verdict.lower() == "deception":
-            st.error("🚨 Integrity breach detected. Evidence does not match baseline.")
-        else:
-            st.warning("⚠️ Verdict unclear. Further analysis recommended.")
-
-        st.markdown("#### 🔐 Evidence Fingerprints")
-        st.code(f"Baseline Hash: {baseline_hash}\nSubject Hash: {subject_hash}", language="text")
-
-        st.markdown("#### 🔍 Anomaly Flags")
-        if anomalies:
-            for item in anomalies:
-                st.write(f"- {item}")
-        else:
-            st.write("No anomalies detected.")
-
-        try:
-            percent = float(confidence.strip("%")) / 100
-            st.progress(percent)
-        except:
-            pass
-
-        with st.expander("🎬 Preview Videos"):
-            st.video(base_path)
-            st.video(subject_path)
+        # 🎯 Display Result (modular via output.py)
+        display_verdict(result.get("verdict", "Undetermined"), result.get("confidence", "N/A"))
+        display_hashes(result.get("baseline_hash", ""), result.get("subject_hash", ""))
+        display_anomalies(result.get("anomalies", []))
+        display_progress(result.get("confidence", "0%"))
+        preview_videos(base_path, subject_path)
