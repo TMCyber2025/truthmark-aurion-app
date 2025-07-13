@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import librosa
 import tempfile
-import os
 from scipy.signal import butter, filtfilt, find_peaks
 from datetime import datetime
 
@@ -24,7 +23,7 @@ def compute_rppg(frames):
     heart_rate = len(peaks) * 2
     rr_intervals = np.diff(peaks)
     hrv_std = float(np.std(rr_intervals)) if len(rr_intervals) > 1 else 0.0
-    return filtered, heart_rate, hrv_std
+    return filtered[:300], heart_rate, hrv_std
 
 def compute_ear(frames):
     ear_trace = []
@@ -35,42 +34,59 @@ def compute_ear(frames):
     blink_rate = sum(1 for e in ear_trace if e < 0.15) / len(ear_trace)
     return ear_trace, blink_rate
 
-def compute_semantic_drift(audio_path, baseline_text):
-    try:
-        y, sr = librosa.load(audio_path, sr=None)
-        y_resampled = librosa.resample(y, orig_sr=sr, target_sr=16000)
-        _ = librosa.feature.mfcc(y=y_resampled, sr=16000)  # analysis placeholder
-    except Exception as e:
-        print("Audio error:", e)
-        return 0.0
+def extract_mfcc(path):
+    y, sr = librosa.load(path, sr=None)
+    y_resampled = librosa.resample(y, orig_sr=sr, target_sr=16000)
+    mfcc = librosa.feature.mfcc(y=y_resampled, sr=16000)
+    return mfcc.mean(axis=1)
 
-    overlap = len(set(baseline_text.split()) & set(baseline_text.split()))
-    drift_score = round(1.0 - overlap / max(len(baseline_text.split()), 1), 3)
-    return drift_score
+def cosine_distance(v1, v2):
+    if len(v1) != len(v2): return 1.0
+    norm_v1 = np.linalg.norm(v1)
+    norm_v2 = np.linalg.norm(v2)
+    if norm_v1 == 0 or norm_v2 == 0: return 1.0
+    return round(1.0 - np.dot(v1, v2) / (norm_v1 * norm_v2), 3)
 
-def analyze_evidence(uploaded_file, baseline_text=None):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video:
-        temp_video.write(uploaded_file.getbuffer())
-        video_path = temp_video.name
+def analyze_with_baseline(baseline_file, subject_file):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as f1:
+        f1.write(baseline_file.getbuffer())
+        baseline_path = f1.name
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as f2:
+        f2.write(subject_file.getbuffer())
+        subject_path = f2.name
 
-    frames = extract_frames(video_path)
-    rppg_curve, heart_rate, hrv_std = compute_rppg(frames)
-    ear_curve, blink_rate = compute_ear(frames)
-    audio_path = video_path
+    # Extract frames
+    base_frames = extract_frames(baseline_path)
+    subj_frames = extract_frames(subject_path)
 
-    if not baseline_text:
-        baseline_text = "This is the expected baseline context."
+    # Compute biometric features
+    base_rppg, base_hr, base_hrv = compute_rppg(base_frames)
+    subj_rppg, subj_hr, subj_hrv = compute_rppg(subj_frames)
 
-    drift_score = compute_semantic_drift(audio_path, baseline_text)
-    verdict = "Truthful ✅" if hrv_std < 0.25 and drift_score < 0.2 else "Inconsistent ⚠️"
+    base_ear, base_blink = compute_ear(base_frames)
+    subj_ear, subj_blink = compute_ear(subj_frames)
+
+    # MFCC semantic comparison
+    base_mfcc = extract_mfcc(baseline_path)
+    subj_mfcc = extract_mfcc(subject_path)
+    drift_score = cosine_distance(base_mfcc, subj_mfcc)
+
+    # Deltas
+    hrv_delta = round(subj_hrv - base_hrv, 3)
+    blink_delta = round(subj_blink - base_blink, 3)
+
+    verdict = "Truthful ✅"
+    if hrv_delta > 0.15 or drift_score > 0.3 or abs(blink_delta) > 0.1:
+        verdict = "Inconsistent ⚠️"
 
     return {
-        "heart_rate": round(heart_rate, 1),
-        "hrv_std": round(hrv_std, 3),
-        "blink_ear": round(blink_rate, 3),
+        "base_hr": round(base_hr, 1),
+        "subj_hr": round(subj_hr, 1),
+        "hrv_delta": hrv_delta,
+        "blink_delta": blink_delta,
         "drift_score": drift_score,
         "verdict": verdict,
-        "rppg_curve": rppg_curve[:300],
-        "ear_curve": ear_curve[:300],
+        "rppg_curves": {"baseline": base_rppg, "subject": subj_rppg},
+        "ear_curves": {"baseline": base_ear, "subject": subj_ear},
         "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
