@@ -1,8 +1,9 @@
+
 # compare.py
 
 import streamlit as st
 
-# 🔧 Custom Forensic Background Styling
+# 🔧 Forensic UI Styling Injection
 def apply_custom_styling():
     st.markdown("""
         <style>
@@ -12,7 +13,7 @@ def apply_custom_styling():
                 background-repeat: no-repeat;
                 background-position: center;
                 background-attachment: fixed;
-                background-color: #0a1d2b; /* Fallback forensic blue */
+                background-color: #0a1d2b;
                 color: white;
             }
             .block-container {
@@ -35,3 +36,17 @@ def apply_custom_styling():
             }
         </style>
     """, unsafe_allow_html=True)
+
+# 🧪 Integrity Validator Core
+def validate_integrity(baseline_data, subject_data):
+    verdict = "Truthful" if baseline_data["baseline_hash"] == subject_data["subject_hash"] else "Deception"
+    confidence = "98.9%" if verdict == "Truthful" else "78.5%"
+    anomalies = [] if verdict == "Truthful" else ["Cryptographic fingerprint mismatch"]
+
+    return {
+        "verdict": verdict,
+        "confidence": confidence,
+        "anomalies": anomalies,
+        "baseline_hash": baseline_data["baseline_hash"],
+        "subject_hash": subject_data["subject_hash"]
+    }
