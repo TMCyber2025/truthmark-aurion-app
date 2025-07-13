@@ -4,3 +4,5 @@ matplotlib
 fpdf
 qrcode
 opencv-python-headless
+librosa
+soundfile
