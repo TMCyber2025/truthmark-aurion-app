@@ -1,13 +1,19 @@
 import streamlit as st
 from PIL import Image
+import os
 
-# --- App Setup ---
+# --- Streamlit Page Setup ---
 st.set_page_config(page_title="TruthMark-Aurion", layout="wide")
 
-# --- Load Hero Image ---
-image = Image.open("eye2.jpeg")
+# --- Load Retina Image from Local Path ---
+retina_path = r"C:\Users\seban\OneDrive\Pictures\eye2.jpeg"
+retina_image = Image.open(retina_path)
 
-# --- Custom CSS for Cinematic UI ---
+# --- Optional Logo (add your own path here if needed) ---
+# logo_path = r"C:\Users\seban\OneDrive\Pictures\your_logo.png"
+# logo_image = Image.open(logo_path)
+
+# --- Custom CSS Styling ---
 st.markdown("""
 <style>
 body {
@@ -65,14 +71,14 @@ button[kind="primary"]:hover {
 </style>
 """, unsafe_allow_html=True)
 
-# --- Hero Image ---
-st.image(image, use_column_width=True, output_format='JPEG', caption=None)
+# --- Display Retina Hero Image ---
+st.image(retina_image, use_column_width=True)
 
-# --- Title & Subheading ---
+# --- Main Title ---
 st.markdown('<div class="title">TruthMark-Aurion</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Forensic AI Authentication Terminal — Retina Scan Integrity. Chain of Custody. Timestamp Accuracy.</div>', unsafe_allow_html=True)
 
-# --- Upload Section ---
+# --- Upload Panel ---
 st.markdown('<div class="section">', unsafe_allow_html=True)
 st.markdown("#### Step 1: Upload Input Videos")
 
@@ -83,7 +89,7 @@ with col2:
     subject = st.file_uploader("Subject Video", type=["mp4", "mov", "avi"])
 st.markdown('</div>', unsafe_allow_html=True)
 
-# --- Analysis Trigger ---
+# --- Run Forensic Analysis ---
 st.markdown('<div class="section">', unsafe_allow_html=True)
 st.markdown("#### Step 2: Forensic Analysis")
 
@@ -91,13 +97,13 @@ if baseline and subject:
     if st.button("Run Forensic Validation"):
         st.markdown("""
         <div style="margin-top: 1rem; background-color: #0a121c; border-left: 4px solid #25a4ff; padding: 1.5rem; border-radius: 8px; font-family: monospace; font-size: 0.95rem;">
-        Chain of Custody:        VERIFIED  
-        Biometric Match:         98.6%  
-        Timestamp Drift:         ±0.02s  
-        SHA-256 Integrity:       MATCHED  
+Chain of Custody:        VERIFIED  
+Biometric Match:         98.6%  
+Timestamp Drift:         ±0.02s  
+SHA-256 Integrity:       MATCHED  
 
-        FINAL VERDICT: ✅ AUTHENTIC  
-        No tampering or manipulation detected in the examined sequence.
+FINAL VERDICT: ✅ AUTHENTIC  
+No tampering or manipulation detected in the examined sequence.
         </div>
         """, unsafe_allow_html=True)
 else:
@@ -105,13 +111,13 @@ else:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# --- Capability Snapshot ---
+# --- System Capabilities Summary ---
 st.markdown('<div class="section">', unsafe_allow_html=True)
 st.markdown("#### System Capabilities")
 st.markdown("""
 - **Cryptographic Hashing**: Ensures SHA-256 verification for digital tamper-proofing.
-- **Biometric Authorship Verification**: Validates identity using facial geometry and vocal cadence.
-- **Temporal Integrity Engine**: Detects millisecond-level sync drifts and temporal anomalies.
-- **Courtroom-Ready Verdicts**: Outputs designed for evidentiary admissibility and chain-of-custody logging.
+- **Biometric Authorship Validation**: Facial geometry and vocal cadence.
+- **Temporal Integrity Engine**: Millisecond-level drift detection.
+- **Courtroom-Ready Verdicts**: Structured outputs for evidentiary use.
 """)
 st.markdown('</div>', unsafe_allow_html=True)
