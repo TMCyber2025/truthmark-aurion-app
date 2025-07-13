@@ -4,20 +4,20 @@ from engine import run_demo
 from upload_webcam import capture_webcam
 import os
 
-# Page Setup
+# 🔧 Page Setup
 st.set_page_config(page_title="TruthMark-Aurion Demo", layout="centered")
 st.title("🔍 TruthMark-Aurion: Forensic Integrity Demo")
 
 # 📘 Instructions
 st.markdown("""
 ### 👣 How to Use:
-1. Upload a **Baseline Video** – your verified source material.  
-2. Upload a **Subject Video** – the evidence you want to compare.  
-3. Alternatively, use the webcam to simulate live input.  
+1. **Upload Baseline Video** – verified source material.  
+2. **Upload Subject Video** – evidence input to validate.  
+3. Or toggle **webcam** to simulate live input.  
 Click **Run Forensic Validation** to assess integrity and detect anomalies.
 """)
 
-# 📁 Sidebar Inputs
+# 📁 Sidebar Uploads
 st.sidebar.header("📁 Upload Inputs")
 
 baseline_video = st.sidebar.file_uploader("🎞️ Baseline Video", type=["mp4", "mov"], key="baseline")
@@ -30,6 +30,7 @@ if use_webcam and st.sidebar.button("Start Webcam Capture"):
 
 # 💾 File Saver
 def save_file(uploaded, path):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "wb") as f:
         f.write(uploaded.getbuffer())
     return path
@@ -38,23 +39,23 @@ def save_file(uploaded, path):
 if st.button("Run Forensic Validation"):
     with st.spinner("Running integrity analysis..."):
 
-        # Use webcam + baseline
-        if use_webcam and baseline_video and os.path.exists("uploads/webcam_input.mp4"):
+        # ✅ Validate baseline upload
+        if baseline_video is not None:
             base_path = save_file(baseline_video, "data/baseline.mp4")
-            webcam_path = "uploads/webcam_input.mp4"
-
-            result = run_demo(base_path, webcam_path, "", "")
-            st.subheader("🧠 Webcam-Based Validation Result")
-            st.json(result)
-
-        # Use uploaded videos
-        elif baseline_video and subject_video:
-            base_path = save_file(baseline_video, "data/baseline.mp4")
-            subj_path = save_file(subject_video, "data/subject.mp4")
-
-            result = run_demo(base_path, subj_path, "", "")
-            st.subheader("🧠 File-Based Validation Result")
-            st.json(result)
-
         else:
-            st.error("Please upload both a baseline and subject video, or use webcam + baseline.")
+            st.error("❌ Please upload a Baseline Video.")
+            st.stop()
+
+        # ✅ Validate subject input (webcam or file)
+        if use_webcam and os.path.exists("uploads/webcam_input.mp4"):
+            subject_path = "uploads/webcam_input.mp4"
+        elif subject_video is not None:
+            subject_path = save_file(subject_video, "data/subject.mp4")
+        else:
+            st.error("❌ Please upload a Subject Video or use Webcam.")
+            st.stop()
+
+        # ✅ Run Demo
+        result = run_demo(base_path, subject_path, "", "")
+        st.subheader("🧠 Validation Result")
+        st.json(result)
