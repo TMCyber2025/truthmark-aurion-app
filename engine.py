@@ -3,7 +3,7 @@ import hashlib
 from compare import validate_integrity
 
 def generate_hash(file_path):
-    """Generate a SHA-256 hash for the given file."""
+    """Generate SHA-256 hash from a video file."""
     sha256 = hashlib.sha256()
     with open(file_path, "rb") as f:
         while chunk := f.read(8192):
@@ -11,40 +11,28 @@ def generate_hash(file_path):
     return sha256.hexdigest()
 
 def process_baseline(baseline_video, baseline_txt=None):
-    """Process baseline input: video + optional metadata."""
+    """Process baseline input and return structured data."""
     baseline_hash = generate_hash(baseline_video)
-
-    notes = ""
-    if baseline_txt:
-        try:
-            with open(baseline_txt, "r") as f:
-                notes = f.read()
-        except Exception:
-            notes = "No metadata available."
-
-    return {"baseline_hash": baseline_hash, "notes": notes}
+    return {
+        "baseline_hash": baseline_hash,
+        "notes": ""  # Metadata not used in demo
+    }
 
 def process_subject(subject_video, subject_txt=None):
-    """Process subject input: video + optional metadata."""
+    """Process subject input and return structured data."""
     subject_hash = generate_hash(subject_video)
-
-    notes = ""
-    if subject_txt:
-        try:
-            with open(subject_txt, "r") as f:
-                notes = f.read()
-        except Exception:
-            notes = "No metadata available."
-
-    return {"subject_hash": subject_hash, "notes": notes}
+    return {
+        "subject_hash": subject_hash,
+        "notes": ""  # Metadata not used in demo
+    }
 
 def compare_inputs(baseline_data, subject_data):
-    """Pass processed inputs to integrity validator."""
+    """Send processed input to integrity validator."""
     return validate_integrity(baseline_data, subject_data)
 
 def run_demo(baseline_video, subject_video, baseline_txt=None, subject_txt=None):
-    """Primary demo runner: orchestrates entire process."""
-    base = process_baseline(baseline_video, baseline_txt)
-    subj = process_subject(subject_video, subject_txt)
-    result = compare_inputs(base, subj)
+    """Main orchestration for demo — returns result dictionary."""
+    baseline_data = process_baseline(baseline_video, baseline_txt)
+    subject_data = process_subject(subject_video, subject_txt)
+    result = compare_inputs(baseline_data, subject_data)
     return result
