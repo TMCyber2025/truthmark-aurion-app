@@ -2,19 +2,15 @@ import streamlit as st
 from PIL import Image
 import time
 from datetime import datetime
-import base64
 
 # ============================
-# Load and embed full background
+# Set background from a URL
 # ============================
-def set_bg(image_file):
-    with open(image_file, "rb") as f:
-        data = f.read()
-    encoded = base64.b64encode(data).decode()
+def set_bg_url(url):
     css = f"""
     <style>
     .stApp {{
-        background-image: url("data:image/jpeg;base64,{encoded}");
+        background-image: url("{url}");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -24,9 +20,9 @@ def set_bg(image_file):
     st.markdown(css, unsafe_allow_html=True)
 
 # ============================
-# Main App
+# MAIN APP
 # ============================
-set_bg("eye2.jpeg")  # relative path to your image in same folder
+set_bg_url("https://1drv.ms/i/c/ef5fd94b1e232d41/EXxpFIdYFQlLlhCjUykWSBEBFSreKcsw2nnFhjPR613Jsw?e=eOu8Jj")
 
 st.markdown("<h1 style='color:#7ec8ff; font-family: monospace;'>TruthMark-Aurion</h1>", unsafe_allow_html=True)
 st.markdown("<h4 style='color:#cfd8e3; font-family: monospace;'>Guardian of the Truth</h4>", unsafe_allow_html=True)
@@ -69,4 +65,3 @@ with st.container():
 # ============================
 st.markdown("<hr style='border:1px solid #294460;'>", unsafe_allow_html=True)
 st.caption("© 2025 TruthMark-Aurion — Guardian of the Truth")
-
