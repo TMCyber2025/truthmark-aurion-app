@@ -3,12 +3,10 @@ import tempfile
 import matplotlib.pyplot as plt
 from fpdf import FPDF
 from datetime import datetime
-from engine import analyze_evidence  # Make sure engine.py is in the same folder
+from engine import analyze_evidence
 
-# ===== Streamlit Config =====
 st.set_page_config(page_title="TruthMark-Aurion", page_icon="🧬", layout="centered")
 
-# ===== Branding =====
 st.markdown("""
 <style>
 body { background-color: #f8f9fa; color: #333; }
@@ -18,29 +16,29 @@ body { background-color: #f8f9fa; color: #333; }
 </style>
 """, unsafe_allow_html=True)
 
-# ===== Header =====
 st.markdown("<div class='title'>TruthMark-Aurion</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Biometric-Linguistic Forensic Analysis</div>", unsafe_allow_html=True)
 
-# ===== Upload Section =====
-uploaded_file = st.file_uploader("🧬 Upload Forensic Video File", type=["mp4", "mov", "avi"])
+uploaded_file = st.file_uploader("🎥 Upload Video File", type=["mp4", "mov", "avi"])
+baseline_file = st.file_uploader("📄 Upload Baseline Transcript (TXT)", type=["txt"])
+
 st.markdown("---")
 
-# ===== Run Analysis =====
-if uploaded_file:
+if uploaded_file and baseline_file:
     st.video(uploaded_file)
-    st.info("🔎 Running biometric and linguistic integrity check...")
+    with baseline_file as f:
+        baseline_text = f.read().decode("utf-8")
 
-    results = analyze_evidence(uploaded_file)
+    st.info("🔍 Running biometric and linguistic scoring...")
+    results = analyze_evidence(uploaded_file, baseline_text)
 
     st.success(f"✅ Verdict: {results['verdict']}")
     st.write(f"📍 Timestamp: {results['timestamp']}")
     st.write(f"💓 Heart Rate: {results['heart_rate']} bpm")
     st.write(f"📈 HRV Std Dev: {results['hrv_std']}")
-    st.write(f"👁️ Blink EAR (Avg): {results['blink_ear']}")
-    st.write(f"🧠 Semantic Drift: {results['drift_score']}")
+    st.write(f"👁️ Blink EAR: {results['blink_ear']}")
+    st.write(f"🧠 Semantic Drift Score: {results['drift_score']}")
 
-    # ===== Biometric Plot =====
     fig, ax = plt.subplots()
     ax.plot(results['rppg_curve'], label="rPPG", color="#00c9a7")
     ax.plot(results['ear_curve'], label="EAR", color="#ff7f50")
@@ -48,7 +46,6 @@ if uploaded_file:
     ax.legend(); ax.grid()
     st.pyplot(fig)
 
-    # ===== PDF Report Generation =====
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as pdf_output:
         pdf = FPDF()
         pdf.add_page()
@@ -57,12 +54,11 @@ if uploaded_file:
         pdf.cell(200, 10, txt=f"Timestamp: {results['timestamp']}", ln=True, align='C')
         pdf.cell(200, 10, txt=f"Verdict: {results['verdict']}", ln=True, align='C')
         pdf.cell(200, 10, txt=f"Heart Rate: {results['heart_rate']} bpm", ln=True, align='C')
-        pdf.cell(200, 10, txt=f"HRV Std: {results['hrv_std']}", ln=True, align='C')
+        pdf.cell(200, 10, txt=f"HRV Std Dev: {results['hrv_std']}", ln=True, align='C')
         pdf.cell(200, 10, txt=f"Blink EAR: {results['blink_ear']}", ln=True, align='C')
-        pdf.cell(200, 10, txt=f"Drift Score: {results['drift_score']}", ln=True, align='C')
+        pdf.cell(200, 10, txt=f"Semantic Drift: {results['drift_score']}", ln=True, align='C')
         pdf.output(pdf_output.name)
         with open(pdf_output.name, "rb") as f:
             st.download_button("📄 Download Integrity Report PDF", f, file_name="TruthMark-Aurion-Report.pdf")
 
-# ===== Footer =====
-st.markdown("<div class='footer'>TruthMark-Aurion © 2025 | All analysis results are ephemeral and confidential within this demo. Forensic chain secured by biometric scoring.</div>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>TruthMark-Aurion © 2025 | Forensic report generated based on uploaded media and comparative context.</div>", unsafe_allow_html=True)
