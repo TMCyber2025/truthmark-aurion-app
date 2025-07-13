@@ -3,33 +3,33 @@ import tempfile
 import matplotlib.pyplot as plt
 from fpdf import FPDF
 from datetime import datetime
-from engine import analyze_evidence  # Ensure engine.py is in the same directory
+from engine import analyze_evidence  # Make sure engine.py is in the same folder
 
 # ===== Streamlit Config =====
 st.set_page_config(page_title="TruthMark-Aurion", page_icon="🧬", layout="centered")
 
-# ===== Custom CSS for Branding =====
+# ===== Branding =====
 st.markdown("""
 <style>
-    body { background-color: #f8f9fa; color: #333; }
-    .title { font-family: 'Courier New'; font-size: 48px; color: #00c9a7; text-align: center; margin-top: 30px; }
-    .subtitle { text-align: center; font-size: 20px; color: #555; margin-bottom: 30px; }
-    .footer { text-align: center; color: #777; font-size: 0.85em; margin-top: 40px; }
+body { background-color: #f8f9fa; color: #333; }
+.title { font-family: 'Courier New'; font-size: 48px; color: #00c9a7; text-align: center; margin-top: 30px; }
+.subtitle { text-align: center; font-size: 20px; color: #555; margin-bottom: 30px; }
+.footer { text-align: center; color: #777; font-size: 0.85em; margin-top: 40px; }
 </style>
 """, unsafe_allow_html=True)
 
 # ===== Header =====
 st.markdown("<div class='title'>TruthMark-Aurion</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>Forensic Biometric Analysis</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>Biometric-Linguistic Forensic Analysis</div>", unsafe_allow_html=True)
 
 # ===== Upload Section =====
 uploaded_file = st.file_uploader("🧬 Upload Forensic Video File", type=["mp4", "mov", "avi"])
 st.markdown("---")
 
-# ===== Analysis Trigger =====
+# ===== Run Analysis =====
 if uploaded_file:
     st.video(uploaded_file)
-    st.info("🔎 Running biometric-linguistic analysis... Please wait.")
+    st.info("🔎 Running biometric and linguistic integrity check...")
 
     results = analyze_evidence(uploaded_file)
 
@@ -62,7 +62,7 @@ if uploaded_file:
         pdf.cell(200, 10, txt=f"Drift Score: {results['drift_score']}", ln=True, align='C')
         pdf.output(pdf_output.name)
         with open(pdf_output.name, "rb") as f:
-            st.download_button("📄 Download Integrity Report", f, file_name="TruthMark-Aurion-Report.pdf")
+            st.download_button("📄 Download Integrity Report PDF", f, file_name="TruthMark-Aurion-Report.pdf")
 
 # ===== Footer =====
-st.markdown("<div class='footer'>TruthMark-Aurion © 2025 | Biometric scoring powered by quantum-grade pipeline. Demo data cleared post-session.</div>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>TruthMark-Aurion © 2025 | All analysis results are ephemeral and confidential within this demo. Forensic chain secured by biometric scoring.</div>", unsafe_allow_html=True)
