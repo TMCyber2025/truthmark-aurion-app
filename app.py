@@ -21,7 +21,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================
-# Main title block
+# Main title block with your new badass lines
 # ============================
 st.markdown("""
 <div style="text-align: center; padding: 2rem;">
@@ -31,8 +31,9 @@ st.markdown("""
     <h3 style="color: #cfd8e3; font-weight: 300; font-family: monospace;">
         Guardian of the Truth
     </h3>
-    <p style="color: #a8b5c3; font-size: 1.3rem; max-width: 800px; margin: auto;">
-        333 live biometric sensors. You better think twice before you lie.
+    <p style="color: #a8b5c3; font-size: 1.3rem; max-width: 900px; margin: auto;">
+        333 live biometric sensors that detect deception before you even finish your sentence.<br>
+        You better think twice before you lie.
     </p>
 </div>
 """, unsafe_allow_html=True)
