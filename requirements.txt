@@ -6,3 +6,5 @@ qrcode
 opencv-python-headless
 librosa
 soundfile
+librosa
+soundfile
