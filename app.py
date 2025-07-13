@@ -8,7 +8,7 @@ from datetime import datetime
 st.set_page_config(page_title="TruthMark-Aurion", layout="wide")
 
 # ============================
-# Digital background with CSS noise grid effect
+# Digital dark grid background
 # ============================
 st.markdown("""
 <style>
@@ -17,11 +17,18 @@ st.markdown("""
     background-image: radial-gradient(#1a2a44 1px, transparent 1px);
     background-size: 20px 20px;
 }
+.css-1kyxreq.edgvbvh3, .css-1kyxreq.e1fqkh3o3 {  /* uploader container */
+    background: rgba(10,20,30,0.5);
+    border: 1px solid #7ec8ff;
+    border-radius: 5px;
+    width: 300px;
+    margin: auto;
+}
 </style>
 """, unsafe_allow_html=True)
 
 # ============================
-# Main title block with your new badass lines
+# Main title block with badass lines
 # ============================
 st.markdown("""
 <div style="text-align: center; padding: 2rem;">
@@ -39,22 +46,18 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================
-# Upload demo
+# Small neat uploader
 # ============================
-st.markdown("""
-<div style="background-color: rgba(10,20,30,0.8); padding: 1.5rem; border-radius: 10px; max-width:600px; margin:auto;">
-<h4 style="color:#7ec8ff; font-family: monospace;">Run a quick demo</h4>
-</div>
-""", unsafe_allow_html=True)
+st.markdown("<div style='text-align:center; color:#7ec8ff; font-family: monospace; font-size:1.2rem;'>Run a quick demo</div>", unsafe_allow_html=True)
 
-video = st.file_uploader("🎥 Upload a short video clip for analysis demo", type=["mp4", "mov", "avi"])
+video = st.file_uploader("", type=["mp4", "mov", "avi"], label_visibility="collapsed")
 
 # ============================
-# Simulated verdict
+# Verdict box
 # ============================
 if video:
     if st.button("🚀 Analyse Video"):
-        with st.spinner("Processing with 333 forensic sensors..."):
+        with st.spinner("Running multi-layer biometric scan..."):
             time.sleep(2)
         st.success("Analysis complete.")
         st.markdown(f"""
@@ -70,7 +73,7 @@ if video:
         """, unsafe_allow_html=True)
         st.caption(f"Report generated at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 else:
-    st.info("Upload a video above to activate the forensic demo.")
+    st.info("Select a short video to see the live forensic demo.")
 
 # ============================
 # Footer
