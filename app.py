@@ -1,6 +1,6 @@
 import streamlit as st
 
-# 🛡️ Hero Banner with Cinematic Styling
+# 🛡️ Cinematic Hero Banner
 st.markdown("""
 <div style="text-align: center; padding-top: 2rem; padding-bottom: 1.5rem;">
     <h1 style="font-family: 'Orbitron', sans-serif; font-size: 3.2rem; color: #a3e4ff; margin-bottom: 0;">
@@ -12,7 +12,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 📘 Animated Instruction Panel
+# 📘 Instruction Panel
 st.markdown("""
 <div style="text-align: center; padding: 1.5rem 2rem; background-color: rgba(14,42,69,0.7); border-radius: 12px; box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);">
     <p style="font-family: 'Exo', sans-serif; font-size: 1.05rem; color: #cfd8e3; line-height: 1.7;">
@@ -22,6 +22,15 @@ st.markdown("""
     </p>
 </div>
 """, unsafe_allow_html=True)
+
+# 🎥 Upload Blocks
+st.subheader("📁 Upload Verification Materials")
+
+col1, col2 = st.columns(2)
+with col1:
+    baseline_video = st.file_uploader("Upload Baseline Video", type=["mp4", "mov", "avi"], key="baseline")
+with col2:
+    subject_video = st.file_uploader("Upload Subject Video", type=["mp4", "mov", "avi"], key="subject")
 
 # ✨ Feature Highlights Section
 st.markdown("""
@@ -40,3 +49,11 @@ st.markdown("""
   </div>
 </div>
 """, unsafe_allow_html=True)
+
+# 🚀 Forensic Trigger Button
+if baseline_video and subject_video:
+    if st.button("🧪 Run Forensic Validation"):
+        st.success("Validation initiated. Processing video biometrics and hashes...")
+        # Placeholder for future validation logic
+else:
+    st.info("Please upload both videos to enable forensic validation.")
